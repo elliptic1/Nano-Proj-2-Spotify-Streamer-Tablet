@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Spotify Streamer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="search_by_artist_name">Search by artist name</string>
+    <string name="search_result_item_default_filler_text">Default filler text for search result item</string>
+    <string name="top10tracks">Top 10 Tracks</string>
+    <string name="title_searchresult_list">SearchResults</string>
+    <string name="title_searchresult_detail">SearchResult Detail</string>
+
+    <string name="action_prev_btn">action_prev_btn</string>
+    <string name="action_next_btn">action_next_btn</string>
+</resources>
