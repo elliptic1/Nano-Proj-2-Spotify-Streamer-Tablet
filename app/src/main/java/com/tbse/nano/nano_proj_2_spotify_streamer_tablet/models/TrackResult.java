@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.MainActivity;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Image;
@@ -53,7 +53,7 @@ public class TrackResult implements Parcelable {
 
     public Track getTrack() {
         if (track == null) {
-            Log.d(MainActivity.TAG, "getting new empty track");
+            Log.d(SearchResultListActivity.TAG, "getting new empty track");
             track = new Track();
         }
         return track;

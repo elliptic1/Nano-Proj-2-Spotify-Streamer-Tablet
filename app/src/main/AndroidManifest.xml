@@ -10,8 +10,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity_"
-            android:label="@string/app_name" >
+            android:name=".activities.SearchResultListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,8 +20,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ListTracksActivity_"
-            android:label="@string/top10tracks" />
+            android:name=".activities.SearchResultDetailActivity"
+            android:label="@string/title_searchresult_detail"
+            android:parentActivityName=".activities.SearchResultListActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SearchResultListActivity" />
+        </activity>
+        <activity android:name=".activities.ListTracksActivity_" />
     </application>
 
 </manifest>

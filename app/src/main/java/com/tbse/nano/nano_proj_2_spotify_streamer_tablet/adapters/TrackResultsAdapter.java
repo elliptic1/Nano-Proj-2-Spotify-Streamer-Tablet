@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.MainActivity;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
 import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
 import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views.TrackResultView;
 import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views.TrackResultView_;
@@ -38,7 +38,7 @@ public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
         }
 
         TrackResult tr = getItem(position);
-        Log.d(MainActivity.TAG, "binding " + tr);
+        Log.d(SearchResultListActivity.TAG, "binding " + tr);
 
         trackResultView.bind(getItem(position));
 

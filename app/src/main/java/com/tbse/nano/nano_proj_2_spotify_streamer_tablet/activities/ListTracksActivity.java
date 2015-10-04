@@ -39,7 +39,7 @@ import retrofit.client.Response;
 @DebugLog
 public class ListTracksActivity extends FragmentActivity {
 
-    private final static String TAG = MainActivity.TAG + "-ListTrackAct";
+    private final static String TAG = SearchResultListActivity.TAG + "-ListTrackAct";
 
     private PlayTrackFragment playTrackFragment;
 

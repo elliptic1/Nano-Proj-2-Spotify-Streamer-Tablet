@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.MainActivity;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
 import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
@@ -52,7 +52,7 @@ public class PlayTrackFragment extends DialogFragment {
 
     private int numberOfSearchResults = 0;
 
-    private static String TAG = MainActivity.TAG;
+    private static String TAG = SearchResultListActivity.TAG;
 
     public PlayTrackFragment() {
         Log.d(TAG, "PTF constr");
@@ -62,7 +62,7 @@ public class PlayTrackFragment extends DialogFragment {
     void clickMiddle() {
         // TODO play / pause
 
-        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
 
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -72,7 +72,7 @@ public class PlayTrackFragment extends DialogFragment {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        MainActivity.setMediaPlayer(mediaPlayer);
+        SearchResultListActivity.setMediaPlayer(mediaPlayer);
 
         if (mPlayerState == PlayerState.PAUSED) {
             mPlayerState = PlayerState.PLAYING;
@@ -94,7 +94,7 @@ public class PlayTrackFragment extends DialogFragment {
 
             mediaPlayer.release();
 
-            MainActivity.setMediaPlayer(null);
+            SearchResultListActivity.setMediaPlayer(null);
 
         }
 
@@ -102,7 +102,7 @@ public class PlayTrackFragment extends DialogFragment {
 
     @Background
     void startAudio(String track_prev_url) {
-        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
         try {
             if (mediaPlayer.isPlaying()) {
                 return;
@@ -206,7 +206,7 @@ public class PlayTrackFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
         if (mediaPlayer == null) {
             mPlayerState = PlayerState.PAUSED;
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);

@@ -6,6 +6,9 @@
     <dimen name="album_image_side">80dp</dimen>
     <dimen name="album_image_margin">20dp</dimen>
 
+    <dimen name="app_bar_height">6dp</dimen>
+    <dimen name="fab_margin">36dp</dimen>
+
     <dimen name="dialog_fragment_width">300dp</dimen>
     <dimen name="dialog_fragment_btn_width">80dp</dimen>
 
