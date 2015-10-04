@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.models;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models;
 
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;

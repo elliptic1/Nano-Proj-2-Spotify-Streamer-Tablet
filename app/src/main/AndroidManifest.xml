@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tbse.nano.nano_proj_1_spotify_streamer" >
+    package="com.tbse.nano.nano_proj_2_spotify_streamer_tablet" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 

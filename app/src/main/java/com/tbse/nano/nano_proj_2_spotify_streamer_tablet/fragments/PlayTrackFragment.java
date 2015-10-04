@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.fragments;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tbse.nano.nano_proj_1_spotify_streamer.R;
-import com.tbse.nano.nano_proj_1_spotify_streamer.activities.MainActivity;
-import com.tbse.nano.nano_proj_1_spotify_streamer.models.TrackResult;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.MainActivity;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;

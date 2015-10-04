@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

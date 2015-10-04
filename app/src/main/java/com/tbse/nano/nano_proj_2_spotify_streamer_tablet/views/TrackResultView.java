@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.views;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views;
 
 import android.content.Context;
 import android.view.View;
@@ -7,8 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tbse.nano.nano_proj_1_spotify_streamer.R;
-import com.tbse.nano.nano_proj_1_spotify_streamer.models.TrackResult;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

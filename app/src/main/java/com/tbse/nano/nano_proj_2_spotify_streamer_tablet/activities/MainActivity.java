@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.activities;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.tbse.nano.nano_proj_1_spotify_streamer.R;
-import com.tbse.nano.nano_proj_1_spotify_streamer.adapters.SearchResultsAdapter;
-import com.tbse.nano.nano_proj_1_spotify_streamer.models.ParcelableArtist;
-import com.tbse.nano.nano_proj_1_spotify_streamer.models.SearchResult;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.adapters.SearchResultsAdapter;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.ParcelableArtist;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.SearchResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;

@@ -1,15 +1,15 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.activities;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.tbse.nano.nano_proj_1_spotify_streamer.R;
-import com.tbse.nano.nano_proj_1_spotify_streamer.adapters.TrackResultsAdapter;
-import com.tbse.nano.nano_proj_1_spotify_streamer.fragments.PlayTrackFragment;
-import com.tbse.nano.nano_proj_1_spotify_streamer.fragments.PlayTrackFragment_;
-import com.tbse.nano.nano_proj_1_spotify_streamer.models.TrackResult;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.adapters.TrackResultsAdapter;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments.PlayTrackFragment;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments.PlayTrackFragment_;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;

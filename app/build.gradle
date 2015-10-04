@@ -18,23 +18,23 @@ buildscript {
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
-        resourcePackageName 'com.tbse.nano.nano_proj_1_spotify_streamer'
+        resourcePackageName 'com.tbse.nano.nano_proj_2_spotify_streamer_tablet'
     }
 }
 
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
-    def vc = 6
+    def vc = 7
 
     defaultConfig {
-        applicationId "com.tbse.nano.nano_proj_1_spotify_streamer"
+        applicationId "com.tbse.nano.nano_proj_2_spotify_streamer_tablet"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode vc
-        versionName "1.0.1 build " + vc
+        versionName "1.0.0 build " + vc
     }
     buildTypes {
         release {
@@ -56,15 +56,15 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     apt 'org.androidannotations:androidannotations:3.2'
     compile 'org.androidannotations:androidannotations-api:3.2'
-    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:support-v4:23.0.1'
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:design:23.0.1'
     compile(name: 'spotify-web-api-android-0.1.0', ext: 'aar')
 }
 

@@ -1,10 +1,10 @@
-package com.tbse.nano.nano_proj_1_spotify_streamer.models;
+package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.tbse.nano.nano_proj_1_spotify_streamer.activities.MainActivity;
+import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.MainActivity;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Image;
