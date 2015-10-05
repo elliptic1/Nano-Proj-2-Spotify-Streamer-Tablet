@@ -39,7 +39,7 @@ public class SearchResult {
 
     private static void addItem(SearchResultItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getId(), item);
     }
 
     public SearchResult.SearchResultItem getItem(int n) {
@@ -47,7 +47,7 @@ public class SearchResult {
     }
 
     private static SearchResultItem createDummyItem(int position) {
-        return new SearchResultItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new SearchResultItem(""+position, new Artist());
     }
 
     private static String makeDetails(int position) {
@@ -59,24 +59,22 @@ public class SearchResult {
         return builder.toString();
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
     public static class SearchResultItem {
-        public String id;
-        public String content;
-        public String details;
+        private String id;
         private Artist artist;
 
-        public SearchResultItem(String id, String content, String details) {
+        public String getId() {
+            return id;
+        }
+
+        public SearchResultItem(String id, Artist artist) {
             this.id = id;
-            this.content = content;
-            this.details = details;
+            this.artist = artist;
         }
 
         @Override
         public String toString() {
-            return content;
+            return getArtistName();
         }
 
         public String getGenre() {

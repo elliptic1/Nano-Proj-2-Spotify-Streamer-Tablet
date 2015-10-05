@@ -3,11 +3,24 @@ package com.tbse.nano.p2_ss_tablet.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
+import com.tbse.nano.p2_ss_tablet.adapters.SearchResultsAdapter;
+import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.SearchResult;
+
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EFragment;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment
@@ -18,7 +31,10 @@ import com.tbse.nano.p2_ss_tablet.models.SearchResult;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
+@EFragment
 public class SearchResultListFragment extends ListFragment {
+
+    public static String TAG = SearchResultListActivity.TAG + "-SRLFrag";
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -67,17 +83,12 @@ public class SearchResultListFragment extends ListFragment {
     public SearchResultListFragment() {
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<SearchResult.SearchResultItem>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                SearchResult.ITEMS));
+        setListAdapter(new SearchResultsAdapter(getActivity()));
+
     }
 
     @Override
@@ -89,6 +100,53 @@ public class SearchResultListFragment extends ListFragment {
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
+    }
+
+    @Background
+    public void populateSearchResultsList(final List<ParcelableArtist> sr) {
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+
+                Log.d(TAG, "populating search results");
+
+                if (sr == null) {
+                    Log.e(TAG, "called populate with null list");
+                    return;
+                }
+
+                // sort by popularity
+                Collections.sort(sr, new Comparator<ParcelableArtist>() {
+                    @Override
+                    public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
+                        return rhs.getArtist().popularity - lhs.getArtist().popularity;
+                    }
+                });
+
+                final ListIterator<ParcelableArtist> parcelableArtistListIterator = sr.listIterator();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int id = 0;
+                        while (parcelableArtistListIterator.hasNext()) {
+                            ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
+                            Log.d(TAG, "got " + parcelableArtist);
+                            getSearchResultsAdapter().add(new SearchResult.SearchResultItem(""+id, parcelableArtist.getArtist()));
+                            ++id;
+                        }
+                    }
+                });
+
+                Log.d(TAG, "done populating search results");
+//                makeNewAdapter(sr);
+//            }
+//        }).start();
+
+    }
+
+    private SearchResultsAdapter getSearchResultsAdapter() {
+        return (SearchResultsAdapter) getListAdapter();
     }
 
     @Override
@@ -117,7 +175,7 @@ public class SearchResultListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(SearchResult.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(SearchResult.ITEMS.get(position).getId());
     }
 
     @Override

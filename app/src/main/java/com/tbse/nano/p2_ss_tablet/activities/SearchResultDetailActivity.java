@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
 
+import org.androidannotations.annotations.EActivity;
+
 /**
  * An activity representing a single SearchResult detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
@@ -22,6 +24,7 @@ import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link SearchResultDetailFragment}.
  */
+@EActivity
 public class SearchResultDetailActivity extends AppCompatActivity {
 
     @Override

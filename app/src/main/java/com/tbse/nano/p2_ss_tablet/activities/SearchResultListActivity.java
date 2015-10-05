@@ -22,16 +22,22 @@ import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.SearchResultListFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.SearchResultListFragment_;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.SearchResult;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -61,15 +67,16 @@ import retrofit.client.Response;
  * {@link SearchResultListFragment.Callbacks} interface
  * to listen for item selections.
  */
+@EActivity
 public class SearchResultListActivity extends AppCompatActivity
         implements SearchResultListFragment.Callbacks {
 
     public static String TAG = "Nano2";
     private static MediaPlayer mediaPlayer;
-    InputMethodManager inputMethodManager;
+    //    InputMethodManager inputMethodManager;
     SearchView searchView;
-    ListView listView;
-    private PlayTrackFragment playTrackFragment;
+//    ListView listView;
+//    private PlayTrackFragment playTrackFragment;
 //    SearchResultsAdapter adapter;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -79,7 +86,8 @@ public class SearchResultListActivity extends AppCompatActivity
     private boolean hasBeenRestored;
     private ArrayList<ParcelableArtist> parcelableArtists;
     private String searchText = "";
-    private ArrayList<TrackResult> searchResults;
+    SearchResultListFragment searchResultListFragment;
+    //    private ArrayList<TrackResult> searchResults;
     SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -108,7 +116,7 @@ public class SearchResultListActivity extends AppCompatActivity
                         parcelableArtists.add(parcelableArtist);
                     }
 
-                    populateSearchResultsList(parcelableArtists);
+                    searchResultListFragment.populateSearchResultsList(parcelableArtists);
                 }
 
                 @Override
@@ -154,6 +162,9 @@ public class SearchResultListActivity extends AppCompatActivity
             }
         });
 
+        searchResultListFragment = ((SearchResultListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.searchresult_list));
+
         if (findViewById(R.id.searchresult_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
@@ -163,9 +174,8 @@ public class SearchResultListActivity extends AppCompatActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((SearchResultListFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.searchresult_list))
-                    .setActivateOnItemClick(true);
+
+            searchResultListFragment.setActivateOnItemClick(true);
         }
 
         // TODO: If exposing deep links into your app, handle intents here.
@@ -228,36 +238,12 @@ public class SearchResultListActivity extends AppCompatActivity
 //        }).start();
 //    }
 
-    void populateSearchResultsList(final List<ParcelableArtist> sr) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (sr == null) {
-                    Log.e(TAG, "called populate with null list");
-                    return;
-                }
-
-                // sort by popularity
-                Collections.sort(sr, new Comparator<ParcelableArtist>() {
-                    @Override
-                    public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
-                        return rhs.getArtist().popularity - lhs.getArtist().popularity;
-                    }
-                });
-
-//                makeNewAdapter(sr);
-            }
-        }).start();
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (hasBeenRestored) {
-            populateSearchResultsList(parcelableArtists);
+            searchResultListFragment.populateSearchResultsList(parcelableArtists);
             getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
             );
@@ -278,28 +264,28 @@ public class SearchResultListActivity extends AppCompatActivity
         }
     }
 
-    void playTrack(int trackNumber) {
-        Log.d(TAG, "got play track intent: " + trackNumber);
-
-        if (trackNumber >= searchResults.size()) return;
-
-        if (playTrackFragment != null) {
-            try {
-                playTrackFragment.dismiss();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
-        Bundle b = new Bundle();
-        TrackResult trackResult = new TrackResult(searchResults.get(trackNumber).getTrack(), trackNumber);
-        b.putParcelable("track", trackResult);
-        b.putInt("trackNum", trackNumber);
-        b.putInt("numberOfSearchResults", searchResults.size());
-        playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
-        playTrackFragment.show(getFragmentManager(), "track");
-    }
+//    void playTrack(int trackNumber) {
+//        Log.d(TAG, "got play track intent: " + trackNumber);
+//
+//        if (trackNumber >= searchResults.size()) return;
+//
+//        if (playTrackFragment != null) {
+//            try {
+//                playTrackFragment.dismiss();
+//            } catch (Exception e) {
+//                // ignore
+//            }
+//        }
+//
+//        Bundle b = new Bundle();
+//        TrackResult trackResult = new TrackResult(searchResults.get(trackNumber).getTrack(), trackNumber);
+//        b.putParcelable("track", trackResult);
+//        b.putInt("trackNum", trackNumber);
+//        b.putInt("numberOfSearchResults", searchResults.size());
+//        playTrackFragment = new PlayTrackFragment_();
+//        playTrackFragment.setArguments(b);
+//        playTrackFragment.show(getFragmentManager(), "track");
+//    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
