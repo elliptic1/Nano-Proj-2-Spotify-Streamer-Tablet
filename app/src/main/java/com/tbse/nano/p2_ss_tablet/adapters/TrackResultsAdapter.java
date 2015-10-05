@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.adapters;
+package com.tbse.nano.p2_ss_tablet.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views.TrackResultView;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views.TrackResultView_;
+import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.views.TrackResultView;
+import com.tbse.nano.p2_ss_tablet.views.TrackResultView_;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -20,7 +20,8 @@ import hugo.weaving.DebugLog;
 @DebugLog
 public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
 
-    @RootContext Context context;
+    @RootContext
+    Context context;
 
     public TrackResultsAdapter(Context context) {
         super(context, 0);

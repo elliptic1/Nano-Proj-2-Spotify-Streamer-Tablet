@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments;
+package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultDetailActivity;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.DummyContent;
+import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.activities.SearchResultDetailActivity;
+import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
+import com.tbse.nano.p2_ss_tablet.models.SearchResult;
 
 /**
  * A fragment representing a single SearchResult detail screen.
@@ -30,7 +30,7 @@ public class SearchResultDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private SearchResult.SearchResultItem mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,7 +47,7 @@ public class SearchResultDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = SearchResult.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

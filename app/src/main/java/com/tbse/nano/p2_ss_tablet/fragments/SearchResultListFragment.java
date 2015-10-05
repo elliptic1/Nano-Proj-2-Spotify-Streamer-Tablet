@@ -1,31 +1,13 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments;
+package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.adapters.SearchResultsAdapter;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.DummyContent;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.ParcelableArtist;
-
-import java.util.ArrayList;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.Pager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import com.tbse.nano.p2_ss_tablet.models.SearchResult;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment
@@ -91,11 +73,11 @@ public class SearchResultListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
+        setListAdapter(new ArrayAdapter<SearchResult.SearchResultItem>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                DummyContent.ITEMS));
+                SearchResult.ITEMS));
     }
 
     @Override
@@ -135,7 +117,7 @@ public class SearchResultListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(SearchResult.ITEMS.get(position).id);
     }
 
     @Override

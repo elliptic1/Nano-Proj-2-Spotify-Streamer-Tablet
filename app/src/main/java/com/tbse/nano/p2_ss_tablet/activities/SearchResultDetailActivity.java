@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities;
+package com.tbse.nano.p2_ss_tablet.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments.SearchResultDetailFragment;
+import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
 
 /**
  * An activity representing a single SearchResult detail screen. This

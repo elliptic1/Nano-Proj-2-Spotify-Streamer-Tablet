@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tbse.nano.nano_proj_2_spotify_streamer_tablet" >
+    package="com.tbse.nano.p2_ss_tablet" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.SearchResultListActivity"
+            android:name="com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -20,15 +20,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SearchResultDetailActivity"
+            android:name="com.tbse.nano.p2_ss_tablet.activities.SearchResultDetailActivity"
             android:label="@string/title_searchresult_detail"
-            android:parentActivityName=".activities.SearchResultListActivity"
+            android:parentActivityName="com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SearchResultListActivity" />
+                android:value="com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity" />
         </activity>
-        <activity android:name=".activities.ListTracksActivity_" />
     </application>
 
 </manifest>

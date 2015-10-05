@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.views;
+package com.tbse.nano.p2_ss_tablet.views;
 
 import android.content.Context;
 import android.view.View;
@@ -7,8 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.SearchResult;
+import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.models.SearchResult;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -31,7 +31,7 @@ public class SearchResultView extends LinearLayout {
         super(context);
     }
 
-    public void bind(SearchResult searchResult) {
+    public void bind(SearchResult.SearchResultItem searchResult) {
         searchResultTextView.setText(searchResult.getArtistName());
         searchResultMainGenre.setText(searchResult.getGenre());
 

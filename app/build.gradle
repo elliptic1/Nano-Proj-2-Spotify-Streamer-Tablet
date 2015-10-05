@@ -18,7 +18,7 @@ buildscript {
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
-        resourcePackageName 'com.tbse.nano.nano_proj_2_spotify_streamer_tablet'
+        resourcePackageName 'com.tbse.nano.p2_ss_tablet'
     }
 }
 
@@ -30,8 +30,8 @@ android {
     def vc = 7
 
     defaultConfig {
-        applicationId "com.tbse.nano.nano_proj_2_spotify_streamer_tablet"
-        minSdkVersion 16
+        applicationId "com.tbse.nano.p2_ss_tablet"
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode vc
         versionName "1.0.0 build " + vc

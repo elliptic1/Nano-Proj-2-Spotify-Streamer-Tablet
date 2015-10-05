@@ -1,4 +1,4 @@
-package com.tbse.nano.nano_proj_2_spotify_streamer_tablet.fragments;
+package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.R;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.nano_proj_2_spotify_streamer_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -58,7 +58,7 @@ public class PlayTrackFragment extends DialogFragment {
         Log.d(TAG, "PTF constr");
     }
 
-   @Click(R.id.middle_btn)
+    @Click(R.id.middle_btn)
     void clickMiddle() {
         // TODO play / pause
 
@@ -151,8 +151,8 @@ public class PlayTrackFragment extends DialogFragment {
         int numberOfSearchResults = getArguments().getInt("numberOfSearchResults") > 10 ?
                 10 : getArguments().getInt("numberOfSearchResults");
         Log.d(TAG, "click right, showing " + showingTrackNum
-                + " numResults-1 = " + (numberOfSearchResults-1));
-        if (showingTrackNum == numberOfSearchResults-1) return;
+                + " numResults-1 = " + (numberOfSearchResults - 1));
+        if (showingTrackNum == numberOfSearchResults - 1) return;
         showingTrackNum++;
         playTrackNum(showingTrackNum);
     }
