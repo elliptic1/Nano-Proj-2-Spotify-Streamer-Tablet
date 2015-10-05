@@ -22,6 +22,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
+import kaaes.spotify.webapi.android.models.Artist;
+
 /**
  * A list fragment representing a list of SearchResults. This fragment
  * also supports tablet devices by allowing list items to be given an
@@ -105,43 +107,50 @@ public class SearchResultListFragment extends ListFragment {
     @Background
     public void populateSearchResultsList(final List<ParcelableArtist> sr) {
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
+        Log.d(TAG, "populating search results");
 
-                Log.d(TAG, "populating search results");
+        if (sr == null) {
+            Log.e(TAG, "called populate with null list");
+            return;
+        }
 
-                if (sr == null) {
-                    Log.e(TAG, "called populate with null list");
-                    return;
+        // sort by popularity
+        Collections.sort(sr, new Comparator<ParcelableArtist>() {
+            @Override
+            public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
+                return rhs.getArtist().popularity - lhs.getArtist().popularity;
+            }
+        });
+
+        final ListIterator<ParcelableArtist> parcelableArtistListIterator = sr.listIterator();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int id = 0;
+
+                ArrayAdapter<SearchResult.SearchResultItem> arrayAdapter;
+                arrayAdapter = new ArrayAdapter<SearchResult.SearchResultItem>(getContext(), R.layout.activity_searchresult_list);
+
+                while (parcelableArtistListIterator.hasNext()) {
+                    ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
+                    Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
+
+                    Artist srArtist = parcelableArtist.getArtist();
+
+                    SearchResult.SearchResultItem srItem = new SearchResult.SearchResultItem("" + id, srArtist);
+                    arrayAdapter.add(srItem);
+
+//                    getSearchResultsAdapter().setNotifyOnChange(true);
+//                    getSearchResultsAdapter().add(srItem);
+
+                    ++id;
                 }
 
-                // sort by popularity
-                Collections.sort(sr, new Comparator<ParcelableArtist>() {
-                    @Override
-                    public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
-                        return rhs.getArtist().popularity - lhs.getArtist().popularity;
-                    }
-                });
+                setListAdapter(arrayAdapter);
+            }
+        });
 
-                final ListIterator<ParcelableArtist> parcelableArtistListIterator = sr.listIterator();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int id = 0;
-                        while (parcelableArtistListIterator.hasNext()) {
-                            ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
-                            Log.d(TAG, "got " + parcelableArtist);
-                            getSearchResultsAdapter().add(new SearchResult.SearchResultItem(""+id, parcelableArtist.getArtist()));
-                            ++id;
-                        }
-                    }
-                });
-
-                Log.d(TAG, "done populating search results");
-//                makeNewAdapter(sr);
-//            }
-//        }).start();
+        Log.d(TAG, "done populating search results");
 
     }
 
