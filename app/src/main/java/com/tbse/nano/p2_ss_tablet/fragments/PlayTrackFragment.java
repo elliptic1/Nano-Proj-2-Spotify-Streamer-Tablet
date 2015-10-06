@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
+import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -52,7 +52,7 @@ public class PlayTrackFragment extends DialogFragment {
 
     private int numberOfSearchResults = 0;
 
-    private static String TAG = SearchResultListActivity.TAG;
+    private static String TAG = ArtistSearchActivity.TAG;
 
     public PlayTrackFragment() {
         Log.d(TAG, "PTF constr");
@@ -62,7 +62,7 @@ public class PlayTrackFragment extends DialogFragment {
     void clickMiddle() {
         // TODO play / pause
 
-        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
 
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -72,14 +72,14 @@ public class PlayTrackFragment extends DialogFragment {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        SearchResultListActivity.setMediaPlayer(mediaPlayer);
+        ArtistSearchActivity.setMediaPlayer(mediaPlayer);
 
         if (mPlayerState == PlayerState.PAUSED) {
             mPlayerState = PlayerState.PLAYING;
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            AlbumSearchResult tr = getArguments().getParcelable("track");
+            TrackResult tr = getArguments().getParcelable("track");
             if (tr == null) {
                 Log.e(TAG, "track result is null");
                 return;
@@ -94,7 +94,7 @@ public class PlayTrackFragment extends DialogFragment {
 
             mediaPlayer.release();
 
-            SearchResultListActivity.setMediaPlayer(null);
+            ArtistSearchActivity.setMediaPlayer(null);
 
         }
 
@@ -102,7 +102,7 @@ public class PlayTrackFragment extends DialogFragment {
 
     @Background
     void startAudio(String track_prev_url) {
-        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
         try {
             if (mediaPlayer.isPlaying()) {
                 return;
@@ -169,7 +169,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
-        AlbumSearchResult tr = getArguments().getParcelable("track");
+        TrackResult tr = getArguments().getParcelable("track");
         if (tr == null) {
             Log.d(TAG, "tr is null");
             return;
@@ -206,7 +206,7 @@ public class PlayTrackFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        MediaPlayer mediaPlayer = SearchResultListActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
         if (mediaPlayer == null) {
             mPlayerState = PlayerState.PAUSED;
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);

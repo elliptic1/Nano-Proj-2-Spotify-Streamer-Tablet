@@ -4,13 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
+import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class AlbumSearchResult implements Parcelable {
+public class TrackResult implements Parcelable {
 
     private Track track;
 
@@ -24,23 +24,23 @@ public class AlbumSearchResult implements Parcelable {
 
     private int trackIndex; // Should be ten
 
-    public AlbumSearchResult(Track track, int index) {
+    public TrackResult(int index, Track track) {
         this.track = track;
         this.trackIndex = index;
     }
 
-    protected AlbumSearchResult(Parcel in) {
+    protected TrackResult(Parcel in) {
     }
 
-    public static final Creator<AlbumSearchResult> CREATOR = new Creator<AlbumSearchResult>() {
+    public static final Creator<TrackResult> CREATOR = new Creator<TrackResult>() {
         @Override
-        public AlbumSearchResult createFromParcel(Parcel in) {
-            return new AlbumSearchResult(in);
+        public TrackResult createFromParcel(Parcel in) {
+            return new TrackResult(in);
         }
 
         @Override
-        public AlbumSearchResult[] newArray(int size) {
-            return new AlbumSearchResult[size];
+        public TrackResult[] newArray(int size) {
+            return new TrackResult[size];
         }
     };
 
@@ -53,7 +53,7 @@ public class AlbumSearchResult implements Parcelable {
 
     public Track getTrack() {
         if (track == null) {
-            Log.d(SearchResultListActivity.TAG, "getting new empty track");
+            Log.d(ArtistSearchActivity.TAG, "getting new empty track");
             track = new Track();
         }
         return track;

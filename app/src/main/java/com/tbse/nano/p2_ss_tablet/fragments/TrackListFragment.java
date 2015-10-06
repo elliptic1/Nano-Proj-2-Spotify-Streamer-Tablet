@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.p2_ss_tablet.adapters.SearchResultsAdapter;
+import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
+import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
 import org.androidannotations.annotations.Background;
@@ -20,23 +22,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
-import kaaes.spotify.webapi.android.models.Artist;
-
 /**
  * A list fragment representing a list of SearchResults. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link SearchResultDetailFragment}.
+ * currently being viewed in a {@link TrackListFragment}.
  * <p/>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-@EFragment
-public class SearchResultListFragment extends ListFragment {
 
-    public static String TAG = SearchResultListActivity.TAG + "-SRLFrag";
+public class TrackListFragment extends ListFragment {
 
-    private SearchResultsAdapter searchResultsAdapter;
+    public static String TAG = ArtistSearchActivity.TAG + "-SRLFrag";
+
+    private TrackResultsAdapter trackResultsAdapter;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -82,15 +82,15 @@ public class SearchResultListFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SearchResultListFragment() {
+    public TrackListFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchResultsAdapter = new SearchResultsAdapter(getContext());
-        setListAdapter(searchResultsAdapter);
+        trackResultsAdapter = new TrackResultsAdapter(getContext());
+        setListAdapter(trackResultsAdapter);
 
     }
 
@@ -105,53 +105,55 @@ public class SearchResultListFragment extends ListFragment {
         }
     }
 
-    @Background
-    public void populateSearchResultsList(final List<ParcelableArtist> sr) {
-
-        Log.d(TAG, "populating search results");
-
-        if (sr == null) {
-            Log.e(TAG, "called populate with null list");
-            return;
-        }
-
-        // sort by popularity
-        Collections.sort(sr, new Comparator<ParcelableArtist>() {
+    public void populateSearchResultsList(final List<ParcelableTrack> sr) {
+        new Thread(new Runnable() {
             @Override
-            public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
-                return rhs.getArtist().popularity - lhs.getArtist().popularity;
-            }
-        });
+            public void run() {
 
-        final ListIterator<ParcelableArtist> parcelableArtistListIterator = sr.listIterator();
+                Log.d(TAG, "populating track list");
+
+                if (sr == null) {
+                    Log.e(TAG, "called populate with null list");
+                    return;
+                }
+
+                // sort by popularity
+                Collections.sort(sr, new Comparator<ParcelableTrack>() {
+                    @Override
+                    public int compare(ParcelableTrack lhs, ParcelableTrack rhs) {
+                        return rhs.getMyTrack().popularity - lhs.getMyTrack().popularity;
+                    }
+                });
+
+                updateAdapter(sr);
+
+            }
+
+           }).start();
+
+    }
+
+    synchronized private void updateAdapter(List<ParcelableTrack> sr) {
+        final ListIterator<ParcelableTrack> parcelableTrackListIterator = sr.listIterator();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 int id = 0;
 
-                searchResultsAdapter.clear();
-                while (parcelableArtistListIterator.hasNext()) {
-                    ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
-                    Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
+                trackResultsAdapter.clear();
+                while (parcelableTrackListIterator.hasNext()) {
+                    ParcelableTrack parcelableTrack = parcelableTrackListIterator.next();
+                    Log.d(TAG, "got " + id + " " + parcelableTrack.getMyTrack().name);
 
-                    Artist srArtist = parcelableArtist.getArtist();
+                    TrackResult srItem = new TrackResult(id, parcelableTrack.getMyTrack());
 
-                    ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
-
-                    searchResultsAdapter.add(srItem);
+                    trackResultsAdapter.add(srItem);
 
                     ++id;
                 }
 
             }
         });
-
-        Log.d(TAG, "done populating search results");
-
-    }
-
-    private SearchResultsAdapter getSearchResultsAdapter() {
-        return (SearchResultsAdapter) getListAdapter();
     }
 
     @Override

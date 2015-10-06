@@ -14,12 +14,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
-import com.tbse.nano.p2_ss_tablet.fragments.SearchResultListFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
-import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
-
-import org.androidannotations.annotations.EActivity;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
 
@@ -39,21 +37,21 @@ import retrofit.client.Response;
  * An activity representing a list of SearchResults. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link SearchResultDetailActivity} representing
+ * lead to a {@link TrackListActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link SearchResultListFragment} and the item details
- * (if present) is a {@link SearchResultDetailFragment}.
+ * {@link ArtistSearchResultListFragment} and the item details
+ * (if present) is a {@link AlbumSearResultListFragment}.
  * <p/>
  * This activity also implements the required
- * {@link SearchResultListFragment.Callbacks} interface
+ * {@link ArtistSearchResultListFragment.Callbacks} interface
  * to listen for item selections.
  */
 
-public class SearchResultListActivity extends AppCompatActivity
-        implements SearchResultListFragment.Callbacks {
+public class ArtistSearchActivity extends AppCompatActivity
+        implements ArtistSearchResultListFragment.Callbacks {
 
     public static String TAG = "Nano2";
     private static MediaPlayer mediaPlayer;
@@ -61,7 +59,7 @@ public class SearchResultListActivity extends AppCompatActivity
     SearchView searchView;
 //    ListView listView;
 //    private PlayTrackFragment playTrackFragment;
-//    SearchResultsAdapter adapter;
+//    ArtistSearchResultsAdapter adapter;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -70,8 +68,8 @@ public class SearchResultListActivity extends AppCompatActivity
     private boolean hasBeenRestored;
     private ArrayList<ParcelableArtist> parcelableArtists;
     private String searchText = "";
-    SearchResultListFragment searchResultListFragment;
-    //    private ArrayList<AlbumSearchResult> searchResults;
+    ArtistSearchResultListFragment artistSearchResultListFragment;
+    //    private ArrayList<TrackResult> searchResults;
     SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -100,7 +98,7 @@ public class SearchResultListActivity extends AppCompatActivity
                         parcelableArtists.add(parcelableArtist);
                     }
 
-                    searchResultListFragment.populateSearchResultsList(parcelableArtists);
+                    artistSearchResultListFragment.populateSearchResultsList(parcelableArtists);
                 }
 
                 @Override
@@ -125,7 +123,7 @@ public class SearchResultListActivity extends AppCompatActivity
     }
 
     public static void setMediaPlayer(MediaPlayer mediaPlayer) {
-        SearchResultListActivity.mediaPlayer = mediaPlayer;
+        ArtistSearchActivity.mediaPlayer = mediaPlayer;
     }
 
     @Override
@@ -146,10 +144,10 @@ public class SearchResultListActivity extends AppCompatActivity
 //            }
 //        });
 
-        searchResultListFragment = ((SearchResultListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.searchresult_list));
+        artistSearchResultListFragment = ((ArtistSearchResultListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.artistsearchresult_list));
 
-        if (findViewById(R.id.searchresult_detail_container) != null) {
+        if (findViewById(R.id.tracklist_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -159,7 +157,7 @@ public class SearchResultListActivity extends AppCompatActivity
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
 
-            searchResultListFragment.setActivateOnItemClick(true);
+            artistSearchResultListFragment.setActivateOnItemClick(true);
         }
 
         // TODO: If exposing deep links into your app, handle intents here.
@@ -227,7 +225,7 @@ public class SearchResultListActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (hasBeenRestored) {
-            searchResultListFragment.populateSearchResultsList(parcelableArtists);
+            artistSearchResultListFragment.populateSearchResultsList(parcelableArtists);
             getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
             );
@@ -262,7 +260,7 @@ public class SearchResultListActivity extends AppCompatActivity
 //        }
 //
 //        Bundle b = new Bundle();
-//        AlbumSearchResult trackResult = new AlbumSearchResult(searchResults.get(trackNumber).getTrack(), trackNumber);
+//        TrackResult trackResult = new TrackResult(searchResults.get(trackNumber).getTrack(), trackNumber);
 //        b.putParcelable("track", trackResult);
 //        b.putInt("trackNum", trackNumber);
 //        b.putInt("numberOfSearchResults", searchResults.size());
@@ -287,7 +285,7 @@ public class SearchResultListActivity extends AppCompatActivity
     }
 
     /**
-     * Callback method from {@link SearchResultListFragment.Callbacks}
+     * Callback method from {@link ArtistSearchResultListFragment.Callbacks}
      * indicating that the item with the given ID was selected.
      */
     @Override
@@ -297,19 +295,19 @@ public class SearchResultListActivity extends AppCompatActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, id);
-            SearchResultDetailFragment fragment = new SearchResultDetailFragment();
+//            arguments.putString(AlbumSearResultListFragment.ARG_ITEM_ID, id);
+            TrackListFragment fragment = new TrackListFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.searchresult_detail_container, fragment)
+                    .replace(R.id.tracklist_container, fragment)
                     .commit();
 
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Intent detailIntent = new Intent(this, SearchResultDetailActivity.class);
-            detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, id);
-            startActivity(detailIntent);
+            Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
+//            detailIntent.putExtra(TrackListActivity.ARG_ITEM_ID, id);
+            startActivity(trackListActivityIntent);
         }
     }
 
@@ -328,17 +326,17 @@ public class SearchResultListActivity extends AppCompatActivity
                             return;
                         }
 
-                        ArrayList<AlbumSearchResult> albumSearchResults = new ArrayList<AlbumSearchResult>();
+                        ArrayList<TrackResult> trackResults = new ArrayList<TrackResult>();
                         int c = 0;
                         for (Track t : pager.items) {
-                            AlbumSearchResult tr = new AlbumSearchResult(t, c);
+                            TrackResult tr = new TrackResult(c, t);
                             c++;
                             Log.d(TAG, "added track result " + tr);
-                            albumSearchResults.add(tr);
+                            trackResults.add(tr);
                         }
 
                         Log.d(TAG, "TODO: populate search resutls");
-//                      TODO: populateTrackResultsList(albumSearchResults);
+//                      TODO: populateTrackResultsList(trackResults);
                     }
 
                     @Override

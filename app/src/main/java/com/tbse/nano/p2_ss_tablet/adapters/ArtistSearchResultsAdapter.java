@@ -11,19 +11,19 @@ import com.tbse.nano.p2_ss_tablet.views.SearchResultView_;
 
 import java.util.ArrayList;
 
-public class SearchResultsAdapter extends ArrayAdapter<ArtistSearchResult.SearchResultItem> {
+public class ArtistSearchResultsAdapter extends ArrayAdapter<ArtistSearchResult.SearchResultItem> {
 
-    public ArrayList<ArtistSearchResult.SearchResultItem> getSearchResultItems() {
-        return searchResultItems;
-    }
+//    public ArrayList<ArtistSearchResult.SearchResultItem> getSearchResultItems() {
+//        return searchResultItems;
+//    }
+//
+//    public void setSearchResultItems(ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems) {
+//        this.searchResultItems = searchResultItems;
+//    }
 
-    public void setSearchResultItems(ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems) {
-        this.searchResultItems = searchResultItems;
-    }
+//    private ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems;
 
-    private ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems;
-
-    public SearchResultsAdapter(Context context) {
+    public ArtistSearchResultsAdapter(Context context) {
         super(context, 0);
     }
 

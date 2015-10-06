@@ -51,19 +51,18 @@ public class ArtistSearchResult {
         return new SearchResultItem(""+position, new Artist());
     }
 
-    private static String makeDetails(int position) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
-        }
-        return builder.toString();
-    }
+//    private static String makeDetails(int position) {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("Details about Item: ").append(position);
+//        for (int i = 0; i < position; i++) {
+//            builder.append("\nMore details information here.");
+//        }
+//        return builder.toString();
+//    }
 
     public static class SearchResultItem {
         private String id;
         private Artist artist;
-        private Album album;
 
         public String getId() {
             return id;
@@ -74,14 +73,9 @@ public class ArtistSearchResult {
             this.artist = artist;
         }
 
-        public SearchResultItem(String id, Album album) {
-            this.id = id;
-            this.album = album;
-        }
-
         @Override
         public String toString() {
-            return getArtistName() + " - " + getAlbumName();
+            return getArtistName();
         }
 
         public String getGenre() {
@@ -97,13 +91,6 @@ public class ArtistSearchResult {
                 return "null artist";
             }
             return artist.name;
-        }
-
-        public String getAlbumName() {
-            if (album == null) {
-                return "null album";
-            }
-            return album.name;
         }
 
         public int getNumberOfArtistImages() {
