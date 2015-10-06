@@ -16,7 +16,7 @@ import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
 import org.androidannotations.annotations.EActivity;
 
 /**
- * An activity representing a single SearchResult detail screen. This
+ * An activity representing a single ArtistSearchResult detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link SearchResultListActivity}.
@@ -24,7 +24,7 @@ import org.androidannotations.annotations.EActivity;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link SearchResultDetailFragment}.
  */
-@EActivity
+
 public class SearchResultDetailActivity extends AppCompatActivity {
 
     @Override
@@ -34,14 +34,14 @@ public class SearchResultDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

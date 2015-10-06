@@ -10,7 +10,7 @@ import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class TrackResult implements Parcelable {
+public class AlbumSearchResult implements Parcelable {
 
     private Track track;
 
@@ -24,23 +24,23 @@ public class TrackResult implements Parcelable {
 
     private int trackIndex; // Should be ten
 
-    public TrackResult(Track track, int index) {
+    public AlbumSearchResult(Track track, int index) {
         this.track = track;
         this.trackIndex = index;
     }
 
-    protected TrackResult(Parcel in) {
+    protected AlbumSearchResult(Parcel in) {
     }
 
-    public static final Creator<TrackResult> CREATOR = new Creator<TrackResult>() {
+    public static final Creator<AlbumSearchResult> CREATOR = new Creator<AlbumSearchResult>() {
         @Override
-        public TrackResult createFromParcel(Parcel in) {
-            return new TrackResult(in);
+        public AlbumSearchResult createFromParcel(Parcel in) {
+            return new AlbumSearchResult(in);
         }
 
         @Override
-        public TrackResult[] newArray(int size) {
-            return new TrackResult[size];
+        public AlbumSearchResult[] newArray(int size) {
+            return new AlbumSearchResult[size];
         }
     };
 

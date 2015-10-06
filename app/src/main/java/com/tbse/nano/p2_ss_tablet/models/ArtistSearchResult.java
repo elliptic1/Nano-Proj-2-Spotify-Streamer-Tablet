@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
 
@@ -14,7 +15,7 @@ import kaaes.spotify.webapi.android.models.Image;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class SearchResult {
+public class ArtistSearchResult {
 
 
     /**
@@ -42,7 +43,7 @@ public class SearchResult {
         ITEM_MAP.put(item.getId(), item);
     }
 
-    public SearchResult.SearchResultItem getItem(int n) {
+    public ArtistSearchResult.SearchResultItem getItem(int n) {
         return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
     }
 
@@ -62,6 +63,7 @@ public class SearchResult {
     public static class SearchResultItem {
         private String id;
         private Artist artist;
+        private Album album;
 
         public String getId() {
             return id;
@@ -72,14 +74,20 @@ public class SearchResult {
             this.artist = artist;
         }
 
+        public SearchResultItem(String id, Album album) {
+            this.id = id;
+            this.album = album;
+        }
+
         @Override
         public String toString() {
-            return getArtistName();
+            return getArtistName() + " - " + getAlbumName();
         }
 
         public String getGenre() {
-            if (artist == null || artist.genres == null || artist.genres.size() == 0) return "";
-            String genre = artist.genres.get(0);
+            String genre = "";
+            if (artist == null || artist.genres == null || artist.genres.size() == 0) return genre;
+            genre = artist.genres.get(0);
             genre = genre.substring(0, 1).toUpperCase() + genre.substring(1, genre.length());
             return genre;
         }
@@ -91,13 +99,20 @@ public class SearchResult {
             return artist.name;
         }
 
-        public int getNumberOfImages() {
+        public String getAlbumName() {
+            if (album == null) {
+                return "null album";
+            }
+            return album.name;
+        }
+
+        public int getNumberOfArtistImages() {
             if (artist == null || artist.images == null) return 0;
             return artist.images.size();
         }
 
-        public Image getFirstImage() {
-            if (getNumberOfImages() > 0) {
+        public Image getFirstArtistImage() {
+            if (getNumberOfArtistImages() > 0) {
                 return artist.images.get(0);
             }
             return null;

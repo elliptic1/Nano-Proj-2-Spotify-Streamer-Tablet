@@ -17,7 +17,7 @@ import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.SearchResultDetailFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.SearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -51,7 +51,7 @@ import retrofit.client.Response;
  * {@link SearchResultListFragment.Callbacks} interface
  * to listen for item selections.
  */
-@EActivity
+
 public class SearchResultListActivity extends AppCompatActivity
         implements SearchResultListFragment.Callbacks {
 
@@ -71,7 +71,7 @@ public class SearchResultListActivity extends AppCompatActivity
     private ArrayList<ParcelableArtist> parcelableArtists;
     private String searchText = "";
     SearchResultListFragment searchResultListFragment;
-    //    private ArrayList<TrackResult> searchResults;
+    //    private ArrayList<AlbumSearchResult> searchResults;
     SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -216,7 +216,7 @@ public class SearchResultListActivity extends AppCompatActivity
 //                adapter.clear();
 //                for (ParcelableArtist parcelableArtist : sr) {
 //                    if (parcelableArtist == null) continue;
-//                    adapter.add(new SearchResult.SearchResultItem("f1", "f2", "f3"));
+//                    adapter.add(new ArtistSearchResult.SearchResultItem("f1", "f2", "f3"));
 //                }
 //            }
 //        }).start();
@@ -262,7 +262,7 @@ public class SearchResultListActivity extends AppCompatActivity
 //        }
 //
 //        Bundle b = new Bundle();
-//        TrackResult trackResult = new TrackResult(searchResults.get(trackNumber).getTrack(), trackNumber);
+//        AlbumSearchResult trackResult = new AlbumSearchResult(searchResults.get(trackNumber).getTrack(), trackNumber);
 //        b.putParcelable("track", trackResult);
 //        b.putInt("trackNum", trackNumber);
 //        b.putInt("numberOfSearchResults", searchResults.size());
@@ -328,17 +328,17 @@ public class SearchResultListActivity extends AppCompatActivity
                             return;
                         }
 
-                        ArrayList<TrackResult> trackResults = new ArrayList<TrackResult>();
+                        ArrayList<AlbumSearchResult> albumSearchResults = new ArrayList<AlbumSearchResult>();
                         int c = 0;
                         for (Track t : pager.items) {
-                            TrackResult tr = new TrackResult(t, c);
+                            AlbumSearchResult tr = new AlbumSearchResult(t, c);
                             c++;
                             Log.d(TAG, "added track result " + tr);
-                            trackResults.add(tr);
+                            albumSearchResults.add(tr);
                         }
 
                         Log.d(TAG, "TODO: populate search resutls");
-//                      TODO: populateTrackResultsList(trackResults);
+//                      TODO: populateTrackResultsList(albumSearchResults);
                     }
 
                     @Override

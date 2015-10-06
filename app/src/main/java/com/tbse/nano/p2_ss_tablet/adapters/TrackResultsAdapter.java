@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
 import com.tbse.nano.p2_ss_tablet.views.TrackResultView;
 import com.tbse.nano.p2_ss_tablet.views.TrackResultView_;
 
@@ -18,7 +18,7 @@ import hugo.weaving.DebugLog;
 
 @EBean
 @DebugLog
-public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
+public class TrackResultsAdapter extends ArrayAdapter<AlbumSearchResult> {
 
     @RootContext
     Context context;
@@ -38,7 +38,7 @@ public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
             trackResultView = (TrackResultView) convertView;
         }
 
-        TrackResult tr = getItem(position);
+        AlbumSearchResult tr = getItem(position);
         Log.d(SearchResultListActivity.TAG, "binding " + tr);
 
         trackResultView.bind(getItem(position));

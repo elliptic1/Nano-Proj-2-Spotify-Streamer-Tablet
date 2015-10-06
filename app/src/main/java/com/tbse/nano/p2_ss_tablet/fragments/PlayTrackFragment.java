@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -79,7 +79,7 @@ public class PlayTrackFragment extends DialogFragment {
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            TrackResult tr = getArguments().getParcelable("track");
+            AlbumSearchResult tr = getArguments().getParcelable("track");
             if (tr == null) {
                 Log.e(TAG, "track result is null");
                 return;
@@ -169,7 +169,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
-        TrackResult tr = getArguments().getParcelable("track");
+        AlbumSearchResult tr = getArguments().getParcelable("track");
         if (tr == null) {
             Log.d(TAG, "tr is null");
             return;

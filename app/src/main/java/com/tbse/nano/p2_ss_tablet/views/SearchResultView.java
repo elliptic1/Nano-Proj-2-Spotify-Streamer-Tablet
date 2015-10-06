@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.models.SearchResult;
+import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -31,13 +31,13 @@ public class SearchResultView extends LinearLayout {
         super(context);
     }
 
-    public void bind(SearchResult.SearchResultItem searchResult) {
+    public void bind(ArtistSearchResult.SearchResultItem searchResult) {
         searchResultTextView.setText(searchResult.getArtistName());
         searchResultMainGenre.setText(searchResult.getGenre());
 
-        if (searchResult.getNumberOfImages() > 0) {
+        if (searchResult.getNumberOfArtistImages() > 0) {
             searchResultMainImage.setVisibility(View.VISIBLE);
-            Image image = searchResult.getFirstImage();
+            Image image = searchResult.getFirstArtistImage();
             if (image != null) {
                 Picasso.with(getContext())
                         .load(image.url)

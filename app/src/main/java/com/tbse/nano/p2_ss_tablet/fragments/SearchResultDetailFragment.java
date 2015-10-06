@@ -12,10 +12,10 @@ import android.widget.TextView;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.SearchResultDetailActivity;
 import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
-import com.tbse.nano.p2_ss_tablet.models.SearchResult;
+import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
 /**
- * A fragment representing a single SearchResult detail screen.
+ * A fragment representing a single ArtistSearchResult detail screen.
  * This fragment is either contained in a {@link SearchResultListActivity}
  * in two-pane mode (on tablets) or a {@link SearchResultDetailActivity}
  * on handsets.
@@ -30,7 +30,7 @@ public class SearchResultDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private SearchResult.SearchResultItem mItem;
+    private ArtistSearchResult.SearchResultItem mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,7 +47,7 @@ public class SearchResultDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = SearchResult.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = ArtistSearchResult.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

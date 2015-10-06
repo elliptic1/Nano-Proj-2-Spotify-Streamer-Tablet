@@ -5,18 +5,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.tbse.nano.p2_ss_tablet.models.SearchResult;
+import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.views.SearchResultView;
 import com.tbse.nano.p2_ss_tablet.views.SearchResultView_;
 
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.RootContext;
+import java.util.ArrayList;
 
-@EBean
-public class SearchResultsAdapter extends ArrayAdapter<SearchResult.SearchResultItem> {
+public class SearchResultsAdapter extends ArrayAdapter<ArtistSearchResult.SearchResultItem> {
 
-    @RootContext
-    Context context;
+    public ArrayList<ArtistSearchResult.SearchResultItem> getSearchResultItems() {
+        return searchResultItems;
+    }
+
+    public void setSearchResultItems(ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems) {
+        this.searchResultItems = searchResultItems;
+    }
+
+    private ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems;
 
     public SearchResultsAdapter(Context context) {
         super(context, 0);
@@ -28,7 +33,7 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResult.SearchResult
         SearchResultView searchResultView;
 
         if (convertView == null) {
-            searchResultView = SearchResultView_.build(context);
+            searchResultView = SearchResultView_.build(getContext());
         } else {
             searchResultView = (SearchResultView) convertView;
         }

@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+import com.tbse.nano.p2_ss_tablet.models.AlbumSearchResult;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -33,15 +33,15 @@ public class TrackResultView extends LinearLayout {
         super(context);
     }
 
-    public void bind(TrackResult trackResult) {
-        trackTextView.setText(trackResult.getTrack().name);
-        if (trackResult.getAlbum() != null) {
-            trackAlbumTextView.setText(trackResult.getAlbum().name);
+    public void bind(AlbumSearchResult albumSearchResult) {
+        trackTextView.setText(albumSearchResult.getTrack().name);
+        if (albumSearchResult.getAlbum() != null) {
+            trackAlbumTextView.setText(albumSearchResult.getAlbum().name);
         }
 
-        if (trackResult.getNumberOfImages() > 0) {
+        if (albumSearchResult.getNumberOfImages() > 0) {
             albumImageView.setVisibility(View.VISIBLE);
-            Image image = trackResult.getImage();
+            Image image = albumSearchResult.getImage();
             if (image != null) {
                 Picasso.with(getContext())
                         .load(image.url)

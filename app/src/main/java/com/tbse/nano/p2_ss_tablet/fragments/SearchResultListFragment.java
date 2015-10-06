@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.SearchResultListActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.SearchResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
-import com.tbse.nano.p2_ss_tablet.models.SearchResult;
+import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
@@ -37,6 +35,8 @@ import kaaes.spotify.webapi.android.models.Artist;
 public class SearchResultListFragment extends ListFragment {
 
     public static String TAG = SearchResultListActivity.TAG + "-SRLFrag";
+
+    private SearchResultsAdapter searchResultsAdapter;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -89,7 +89,8 @@ public class SearchResultListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setListAdapter(new SearchResultsAdapter(getActivity()));
+        searchResultsAdapter = new SearchResultsAdapter(getContext());
+        setListAdapter(searchResultsAdapter);
 
     }
 
@@ -128,25 +129,20 @@ public class SearchResultListFragment extends ListFragment {
             public void run() {
                 int id = 0;
 
-                ArrayAdapter<SearchResult.SearchResultItem> arrayAdapter;
-                arrayAdapter = new ArrayAdapter<SearchResult.SearchResultItem>(getContext(), R.layout.activity_searchresult_list);
-
+                searchResultsAdapter.clear();
                 while (parcelableArtistListIterator.hasNext()) {
                     ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
                     Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
 
                     Artist srArtist = parcelableArtist.getArtist();
 
-                    SearchResult.SearchResultItem srItem = new SearchResult.SearchResultItem("" + id, srArtist);
-                    arrayAdapter.add(srItem);
+                    ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
 
-//                    getSearchResultsAdapter().setNotifyOnChange(true);
-//                    getSearchResultsAdapter().add(srItem);
+                    searchResultsAdapter.add(srItem);
 
                     ++id;
                 }
 
-                setListAdapter(arrayAdapter);
             }
         });
 
@@ -184,7 +180,7 @@ public class SearchResultListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(SearchResult.ITEMS.get(position).getId());
+        mCallbacks.onItemSelected(ArtistSearchResult.ITEMS.get(position).getId());
     }
 
     @Override
