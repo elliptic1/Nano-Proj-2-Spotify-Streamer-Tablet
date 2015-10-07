@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
@@ -41,11 +42,11 @@ import retrofit.client.Response;
  * more than a {@link TrackListFragment}.
  */
 
-public class TrackListActivity extends AppCompatActivity implements TrackListFragment.Callbacks {
+public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     private TrackListFragment trackListFragment;
     private ArrayList<ParcelableTrack> parcelableTracks;
-    private static final String TAG = "";
+    public static final String TAG = "Nano";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,5 +144,6 @@ public class TrackListActivity extends AppCompatActivity implements TrackListFra
         super.onRestoreInstanceState(savedInstanceState);
 
         parcelableTracks = savedInstanceState.getParcelableArrayList("parcelableTracks");
+        trackListFragment.populateSearchResultsList(parcelableTracks);
     }
 }

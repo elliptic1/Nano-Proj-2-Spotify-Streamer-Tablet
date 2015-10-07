@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
@@ -52,7 +53,7 @@ import retrofit.client.Response;
  */
 
 public class ArtistSearchActivity extends AppCompatActivity
-        implements ArtistSearchResultListFragment.Callbacks {
+        implements Callbacks {
 
     public static String TAG = "Nano2";
     private static MediaPlayer mediaPlayer;

@@ -27,7 +27,7 @@ public class ArtistSearchResult {
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static Map<String, SearchResultItem> ITEM_MAP = new HashMap<String, SearchResultItem>();
+//    public static Map<String, SearchResultItem> ITEM_MAP = new HashMap<String, SearchResultItem>();
 
     private static final int COUNT = 25;
 
@@ -40,12 +40,12 @@ public class ArtistSearchResult {
 
     private static void addItem(SearchResultItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.getId(), item);
+//        ITEM_MAP.put(item.getId(), item);
     }
 
-    public ArtistSearchResult.SearchResultItem getItem(int n) {
-        return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
-    }
+//    public ArtistSearchResult.SearchResultItem getItem(int n) {
+//        return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
+//    }
 
     private static SearchResultItem createDummyItem(int position) {
         return new SearchResultItem(""+position, new Artist());

@@ -7,24 +7,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.Callbacks;
+import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
-import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EFragment;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
- * A list fragment representing a list of SearchResults. This fragment
+ * A list fragment representing a list of TrackResults. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a {@link TrackListFragment}.
@@ -35,7 +30,7 @@ import java.util.ListIterator;
 
 public class TrackListFragment extends ListFragment {
 
-    public static String TAG = ArtistSearchActivity.TAG + "-SRLFrag";
+    public static String TAG = TrackListActivity.TAG + "-TLFrag";
 
     private TrackResultsAdapter trackResultsAdapter;
 
@@ -55,18 +50,6 @@ public class TrackListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
-        public void onItemSelected(String id);
-    }
 
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
@@ -158,13 +141,15 @@ public class TrackListFragment extends ListFragment {
         });
     }
 
+
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+            throw new IllegalStateException("TLActivity must implement fragment's callbacks.");
         }
 
         mCallbacks = (Callbacks) activity;
@@ -184,7 +169,7 @@ public class TrackListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(ArtistSearchResult.ITEMS.get(position).getId());
+        mCallbacks.onItemSelected(TrackResult.ITEMS.get(position).getId());
     }
 
     @Override
@@ -217,4 +202,5 @@ public class TrackListFragment extends ListFragment {
 
         mActivatedPosition = position;
     }
+
 }

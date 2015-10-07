@@ -6,13 +6,18 @@ import android.util.Log;
 
 import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class TrackResult implements Parcelable {
 
     private Track track;
+    public static List<TrackResult.TrackResultItem> ITEMS = new ArrayList<TrackResult.TrackResultItem>();
 
     public int getTrackIndex() {
         return trackIndex;
@@ -71,6 +76,76 @@ public class TrackResult implements Parcelable {
         if (getNumberOfImages() > 0)
             return getTrack().album.images.get(0);
         return null;
+    }
+
+    /**
+     * A map of sample (dummy) items, by ID.
+     */
+//    public static Map<String, SearchResultItem> ITEM_MAP = new HashMap<String, SearchResultItem>();
+
+    private static final int COUNT = 25;
+
+    static {
+        // Add some sample items.
+        for (int i = 1; i <= COUNT; i++) {
+            addItem(createDummyItem(i));
+        }
+    }
+
+    private static void addItem(TrackResultItem item) {
+        ITEMS.add(item);
+//        ITEM_MAP.put(item.getId(), item);
+    }
+
+//    public ArtistSearchResult.SearchResultItem getItem(int n) {
+//        return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
+//    }
+
+    private static TrackResultItem createDummyItem(int position) {
+        return new TrackResultItem(""+position, new Track());
+    }
+
+    public static class TrackResultItem {
+        private String id;
+        private Track track;
+
+        public String getId() {
+            return id;
+        }
+
+        public TrackResultItem(String id, Track track) {
+            this.id = id;
+            this.track = track;
+        }
+
+        @Override
+        public String toString() {
+            return getArtistName();
+        }
+
+        public String getArtistName() {
+            if (track != null) {
+                if (track.artists != null) {
+                    if (track.artists.size() > 0) {
+                        return track.artists.get(0).name;
+                    }
+                }
+            }
+            return "no names";
+        }
+
+        public int getNumberOfTrackImages() {
+            if (track == null || track.album == null || track.album.images == null) return 0;
+            return track.album.images.size();
+        }
+
+        public Image getFirstTrackImage() {
+            if (getNumberOfTrackImages() > 0) {
+                return track.album.images.get(0);
+            }
+            return null;
+        }
+
     }
 
     @Override

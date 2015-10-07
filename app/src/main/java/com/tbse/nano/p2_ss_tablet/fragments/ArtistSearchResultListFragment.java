@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.ArtistSearchResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
@@ -31,7 +32,7 @@ import kaaes.spotify.webapi.android.models.Artist;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-@EFragment
+
 public class ArtistSearchResultListFragment extends ListFragment {
 
     public static String TAG = ArtistSearchActivity.TAG + "-SRLFrag";
@@ -54,18 +55,6 @@ public class ArtistSearchResultListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
-        public void onItemSelected(String id);
-    }
 
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
@@ -105,31 +94,35 @@ public class ArtistSearchResultListFragment extends ListFragment {
         }
     }
 
-    @Background
     public void populateSearchResultsList(final List<ParcelableArtist> sr) {
 
-        Log.d(TAG, "populating search results");
-
-        if (sr == null) {
-            Log.e(TAG, "called populate with null list");
-            return;
-        }
-
-        // sort by popularity
-        Collections.sort(sr, new Comparator<ParcelableArtist>() {
+        new Thread(new Runnable() {
             @Override
-            public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
-                if (lhs == null && rhs == null) return 0;
-                if (lhs == null) return 1;
-                if (rhs == null) return -1;
-                if (rhs.getArtist() == null && lhs.getArtist() == null) return 0;
-                if (rhs.getArtist() == null) return 1;
-                if (lhs.getArtist() == null) return -1;
-                return rhs.getArtist().popularity - lhs.getArtist().popularity;
-            }
-        });
+            public void run() {
+                Log.d(TAG, "populating search results");
 
-        fillInList(sr);
+                if (sr == null) {
+                    Log.e(TAG, "called populate with null list");
+                    return;
+                }
+
+                // sort by popularity
+                Collections.sort(sr, new Comparator<ParcelableArtist>() {
+                    @Override
+                    public int compare(ParcelableArtist lhs, ParcelableArtist rhs) {
+                        if (lhs == null && rhs == null) return 0;
+                        if (lhs == null) return 1;
+                        if (rhs == null) return -1;
+                        if (rhs.getArtist() == null && lhs.getArtist() == null) return 0;
+                        if (rhs.getArtist() == null) return 1;
+                        if (lhs.getArtist() == null) return -1;
+                        return rhs.getArtist().popularity - lhs.getArtist().popularity;
+                    }
+                });
+
+                fillInList(sr);
+            }
+        }).start();
 
     }
 
