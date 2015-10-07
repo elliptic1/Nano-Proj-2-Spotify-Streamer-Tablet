@@ -5,11 +5,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
+import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
+import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.Tracks;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * An activity representing a single TrackList detail screen. This
@@ -21,26 +41,51 @@ import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
  * more than a {@link TrackListFragment}.
  */
 
-public class TrackListActivity extends AppCompatActivity implements TrackListFragment.Callbacks{
+public class TrackListActivity extends AppCompatActivity implements TrackListFragment.Callbacks {
+
+    private TrackListFragment trackListFragment;
+    private ArrayList<ParcelableTrack> parcelableTracks;
+    private static final String TAG = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracklist);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-//        setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        trackListFragment = (TrackListFragment) getSupportFragmentManager().findFragmentById(R.id.trackresult_list);
+        trackListFragment.setActivateOnItemClick(true);
 
-        // Show the Up button in the action bar.
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        SpotifyApi api = new SpotifyApi();
+        final SpotifyService spotify = api.getService();
+        spotify.searchTracks("artist:" + getIntent().getStringExtra("artist"), new Callback<TracksPager>() {
+            @Override
+            public void success(TracksPager tracksPager, Response response) {
+                Pager<Track> pager = tracksPager.tracks;
+                if (pager.items.size() == 0) {
+                    Log.d(TAG, "TODO: clearing list from searchSpotify");
+//                          TODO: clearTrackResultsList();
+                    return;
+                }
+
+                int c = 0;
+                parcelableTracks = new ArrayList<ParcelableTrack>();
+                for (Track t : pager.items) {
+                    ParcelableTrack parcelableTrack;
+                    parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
+                    parcelableTrack.setMyTrack(t);
+                    parcelableTracks.add(parcelableTrack);
+                    c++;
+                }
+
+                trackListFragment.populateSearchResultsList(parcelableTracks);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "failure: " + error.getBody());
+            }
+        });
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -85,5 +130,18 @@ public class TrackListActivity extends AppCompatActivity implements TrackListFra
     @Override
     public void onItemSelected(String id) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("parcelableTracks", parcelableTracks);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        parcelableTracks = savedInstanceState.getParcelableArrayList("parcelableTracks");
     }
 }

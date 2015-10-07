@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
+import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
@@ -55,11 +56,7 @@ public class ArtistSearchActivity extends AppCompatActivity
 
     public static String TAG = "Nano2";
     private static MediaPlayer mediaPlayer;
-    //    InputMethodManager inputMethodManager;
     SearchView searchView;
-//    ListView listView;
-//    private PlayTrackFragment playTrackFragment;
-//    ArtistSearchResultsAdapter adapter;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -68,14 +65,12 @@ public class ArtistSearchActivity extends AppCompatActivity
     private boolean hasBeenRestored;
     private ArrayList<ParcelableArtist> parcelableArtists;
     private String searchText = "";
-    ArtistSearchResultListFragment artistSearchResultListFragment;
-    //    private ArrayList<TrackResult> searchResults;
+    private ArtistSearchResultListFragment artistSearchResultListFragment;
     SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
 
             Log.d(TAG, "Enter was pressed!");
-//            adapter.clear();
 
             searchText = query;
 
@@ -144,8 +139,8 @@ public class ArtistSearchActivity extends AppCompatActivity
 //            }
 //        });
 
-        artistSearchResultListFragment = ((ArtistSearchResultListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.artistsearchresult_list));
+        artistSearchResultListFragment = (ArtistSearchResultListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.artistsearchresult_list);
 
         if (findViewById(R.id.tracklist_container) != null) {
             // The detail container view will be present only in the
@@ -206,21 +201,6 @@ public class ArtistSearchActivity extends AppCompatActivity
         });
     }
 
-//    void makeNewAdapter(final List<ParcelableArtist> sr) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                adapter.clear();
-//                for (ParcelableArtist parcelableArtist : sr) {
-//                    if (parcelableArtist == null) continue;
-//                    adapter.add(new ArtistSearchResult.SearchResultItem("f1", "f2", "f3"));
-//                }
-//            }
-//        }).start();
-//    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -231,11 +211,6 @@ public class ArtistSearchActivity extends AppCompatActivity
             );
         }
         hideKeyboard();
-
-//        listView = (ListView) findViewById(R.id.listView);
-//        if (listView != null) {
-//            listView.setAdapter(adapter);
-//        }
 
         searchView = (SearchView) findViewById(R.id.search_view);
         if (searchView != null) {
@@ -290,12 +265,14 @@ public class ArtistSearchActivity extends AppCompatActivity
      */
     @Override
     public void onItemSelected(String id) {
+        String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
+            Log.d(TAG, "tablet screen");
             Bundle arguments = new Bundle();
-//            arguments.putString(AlbumSearResultListFragment.ARG_ITEM_ID, id);
+            arguments.putString("artist", artist);
             TrackListFragment fragment = new TrackListFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -305,47 +282,11 @@ public class ArtistSearchActivity extends AppCompatActivity
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
+            Log.d(TAG, "phone screen");
             Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
-//            detailIntent.putExtra(TrackListActivity.ARG_ITEM_ID, id);
+            trackListActivityIntent.putExtra("artist", artist);
             startActivity(trackListActivityIntent);
         }
     }
 
-    void searchSpotify(final SpotifyApi api, final String artist) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final SpotifyService spotify = api.getService();
-                spotify.searchTracks("artist:" + artist, new Callback<TracksPager>() {
-                    @Override
-                    public void success(TracksPager tracksPager, Response response) {
-                        Pager<Track> pager = tracksPager.tracks;
-                        if (pager.items.size() == 0) {
-                            Log.d(TAG, "TODO: clearing list from searchSpotify");
-//                          TODO: clearTrackResultsList();
-                            return;
-                        }
-
-                        ArrayList<TrackResult> trackResults = new ArrayList<TrackResult>();
-                        int c = 0;
-                        for (Track t : pager.items) {
-                            TrackResult tr = new TrackResult(c, t);
-                            c++;
-                            Log.d(TAG, "added track result " + tr);
-                            trackResults.add(tr);
-                        }
-
-                        Log.d(TAG, "TODO: populate search resutls");
-//                      TODO: populateTrackResultsList(trackResults);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "failure: " + error.getBody());
-                    }
-                });
-            }
-        }).start();
-
-    }
 }

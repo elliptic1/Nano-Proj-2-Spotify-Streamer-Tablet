@@ -13,16 +13,6 @@ import java.util.ArrayList;
 
 public class ArtistSearchResultsAdapter extends ArrayAdapter<ArtistSearchResult.SearchResultItem> {
 
-//    public ArrayList<ArtistSearchResult.SearchResultItem> getSearchResultItems() {
-//        return searchResultItems;
-//    }
-//
-//    public void setSearchResultItems(ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems) {
-//        this.searchResultItems = searchResultItems;
-//    }
-
-//    private ArrayList<ArtistSearchResult.SearchResultItem> searchResultItems;
-
     public ArtistSearchResultsAdapter(Context context) {
         super(context, 0);
     }

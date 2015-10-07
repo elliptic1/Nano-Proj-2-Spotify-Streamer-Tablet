@@ -20,16 +20,6 @@ import hugo.weaving.DebugLog;
 
 public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
 
-//    public ArrayList<TrackResult> getTrackResults() {
-//        return trackResults;
-//    }
-//
-//    public void setTrackResults(ArrayList<TrackResult> trackResults) {
-//        this.trackResults = trackResults;
-//    }
-//
-//    private ArrayList<TrackResult> trackResults;
-
     public TrackResultsAdapter(Context context) {
         super(context, 0);
     }
@@ -44,9 +34,6 @@ public class TrackResultsAdapter extends ArrayAdapter<TrackResult> {
         } else {
             trackResultView = (TrackResultView) convertView;
         }
-
-        TrackResult tr = getItem(position);
-        Log.d(ArtistSearchActivity.TAG, "binding " + tr);
 
         trackResultView.bind(getItem(position));
 

@@ -44,13 +44,6 @@ public class TrackResult implements Parcelable {
         }
     };
 
-//    public MyTrack getMyTrack() {
-//        if (track == null) {
-//            track = new Track();
-//        }
-//        return new MyTrack().setTrack(track);
-//    }
-
     public Track getTrack() {
         if (track == null) {
             Log.d(ArtistSearchActivity.TAG, "getting new empty track");

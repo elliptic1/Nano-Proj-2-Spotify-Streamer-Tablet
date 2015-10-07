@@ -17,6 +17,7 @@ import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -104,6 +105,7 @@ public class TrackListFragment extends ListFragment {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
     }
+
 
     public void populateSearchResultsList(final List<ParcelableTrack> sr) {
         new Thread(new Runnable() {
