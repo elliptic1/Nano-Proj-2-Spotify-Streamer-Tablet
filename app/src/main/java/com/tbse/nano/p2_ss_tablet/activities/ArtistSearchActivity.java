@@ -267,6 +267,7 @@ public class ArtistSearchActivity extends AppCompatActivity
     @Override
     public void onItemSelected(String id) {
         String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
+        Log.d(TAG, "selected artist: " + artist);
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

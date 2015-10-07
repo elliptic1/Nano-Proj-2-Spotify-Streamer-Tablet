@@ -13,10 +13,20 @@ import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A list fragment representing a list of TrackResults. This fragment
@@ -51,6 +61,8 @@ public class TrackListFragment extends ListFragment {
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
+    private ArrayList<ParcelableTrack> parcelableTracks;
+
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -75,6 +87,44 @@ public class TrackListFragment extends ListFragment {
 
         trackResultsAdapter = new TrackResultsAdapter(getContext());
         setListAdapter(trackResultsAdapter);
+
+        Bundle args = getArguments();
+        String artistName = args.getString("artist");
+
+        parcelableTracks = new ArrayList<ParcelableTrack>();
+
+        SpotifyApi api = new SpotifyApi();
+        final SpotifyService spotify = api.getService();
+        spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
+            @Override
+            public void success(TracksPager tracksPager, Response response) {
+                Pager<Track> pager = tracksPager.tracks;
+                if (pager.items.size() == 0) {
+                    Log.d(TAG, "TODO: clearing list from searchSpotify");
+//                          TODO: clearTrackResultsList();
+                    return;
+                }
+
+                int c = 0;
+                parcelableTracks.clear();
+                for (Track t : pager.items) {
+                    ParcelableTrack parcelableTrack;
+                    parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
+                    parcelableTrack.setMyTrack(t);
+                    parcelableTracks.add(parcelableTrack);
+                    c++;
+                }
+
+                populateSearchResultsList(parcelableTracks);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "failure: " + error.getBody());
+            }
+        });
+
 
     }
 
@@ -140,8 +190,6 @@ public class TrackListFragment extends ListFragment {
             }
         });
     }
-
-
 
     @Override
     public void onAttach(Activity activity) {
