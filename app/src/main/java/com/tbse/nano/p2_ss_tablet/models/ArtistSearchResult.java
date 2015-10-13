@@ -1,5 +1,7 @@
 package com.tbse.nano.p2_ss_tablet.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ import kaaes.spotify.webapi.android.models.Image;
  */
 public class ArtistSearchResult {
 
+    public static String TAG = ArtistSearchResult.TAG + "-ASR";
 
     /**
      * An array of sample (dummy) items.
@@ -39,6 +42,7 @@ public class ArtistSearchResult {
     }
 
     private static void addItem(SearchResultItem item) {
+        Log.d(TAG, "add item " + item.toString());
         ITEMS.add(item);
 //        ITEM_MAP.put(item.getId(), item);
     }
@@ -70,6 +74,7 @@ public class ArtistSearchResult {
 
         public SearchResultItem(String id, Artist artist) {
             this.id = id;
+            Log.d(TAG, "instantiate " + artist.name);
             this.artist = artist;
         }
 

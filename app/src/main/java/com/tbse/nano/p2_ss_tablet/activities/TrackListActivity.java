@@ -46,18 +46,21 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     private TrackListFragment trackListFragment;
     private ArrayList<ParcelableTrack> parcelableTracks;
-    public static final String TAG = "Nano";
+    public static final String TAG = "Nano-TLA";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracklist);
 
         trackListFragment = (TrackListFragment) getSupportFragmentManager().findFragmentById(R.id.trackresult_list);
         trackListFragment.setActivateOnItemClick(true);
 
+        Log.d(TAG, "intent is " + getIntent().toUri(1));
+
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
+        Log.d(TAG, "searching for " + getIntent().getStringExtra("artist"));
         spotify.searchTracks("artist:" + getIntent().getStringExtra("artist"), new Callback<TracksPager>() {
             @Override
             public void success(TracksPager tracksPager, Response response) {
@@ -69,16 +72,18 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
                 }
 
                 int c = 0;
-                parcelableTracks = new ArrayList<ParcelableTrack>();
-                for (Track t : pager.items) {
-                    ParcelableTrack parcelableTrack;
-                    parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
-                    parcelableTrack.setMyTrack(t);
-                    parcelableTracks.add(parcelableTrack);
-                    c++;
-                }
+                if (savedInstanceState == null) {
+                    parcelableTracks = new ArrayList<ParcelableTrack>();
+                    for (Track t : pager.items) {
+                        ParcelableTrack parcelableTrack;
+                        parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
+                        parcelableTrack.setMyTrack(t);
+                        parcelableTracks.add(parcelableTrack);
+                        c++;
+                    }
 
-                trackListFragment.populateSearchResultsList(parcelableTracks);
+                    trackListFragment.populateSearchResultsList(parcelableTracks);
+                }
 
             }
 
@@ -101,13 +106,18 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            arguments.putString("artist", getIntent().getStringExtra("artist"));
+            Log.d(TAG, "artist is " + getIntent().getStringExtra("artist"));
 //            arguments.putString(TrackListFragment.ARG_ITEM_ID,
 //                    getIntent().getStringExtra(TrackListFragment.ARG_ITEM_ID));
             TrackListFragment fragment = new TrackListFragment();
             fragment.setArguments(arguments);
+            Log.d(TAG, "adding trackresult_list");
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.trackresult_list, fragment)
                     .commit();
+        } else {
+            Log.d(TAG, "saved Instance state is not null");
         }
     }
 

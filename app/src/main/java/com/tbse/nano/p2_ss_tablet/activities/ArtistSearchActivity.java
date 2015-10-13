@@ -267,12 +267,14 @@ public class ArtistSearchActivity extends AppCompatActivity
     @Override
     public void onItemSelected(String id) {
         String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
-        Log.d(TAG, "selected artist: " + artist);
+        for (ArtistSearchResult.SearchResultItem searchResultItem: ArtistSearchResult.ITEMS) {
+            Log.d(TAG, "ASA selected item: " + id + " " + searchResultItem.toString());
+        }
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Log.d(TAG, "tablet screen");
+            Log.d(TAG, "tablet screen with artist " + artist);
             Bundle arguments = new Bundle();
             arguments.putString("artist", artist);
             TrackListFragment fragment = new TrackListFragment();
@@ -284,7 +286,7 @@ public class ArtistSearchActivity extends AppCompatActivity
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Log.d(TAG, "phone screen");
+            Log.d(TAG, "phone screen with artist " + artist);
             Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
             trackListActivityIntent.putExtra("artist", artist);
             startActivity(trackListActivityIntent);

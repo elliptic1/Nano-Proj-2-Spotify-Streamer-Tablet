@@ -145,11 +145,14 @@ public class ArtistSearchResultListFragment extends ListFragment {
                         Log.e(TAG, "parcelableArtist.getArtist " + id + " was null");
                         continue;
                     }
-                    Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
+                    Log.d(TAG, "ASRLF got " + id + " " + parcelableArtist.getArtist().name);
 
                     Artist srArtist = parcelableArtist.getArtist();
 
+                    Log.d(TAG, "artist is " + srArtist);
+
                     ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
+                    Log.d(TAG, "sritem has artist " + srItem.getArtistName());
 
                     artistSearchResultsAdapter.add(srItem);
 

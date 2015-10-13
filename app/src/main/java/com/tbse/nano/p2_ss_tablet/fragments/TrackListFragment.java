@@ -89,12 +89,17 @@ public class TrackListFragment extends ListFragment {
         setListAdapter(trackResultsAdapter);
 
         Bundle args = getArguments();
+        if (args == null) {
+            Log.d(TAG, "args are null");
+            return;
+        }
         String artistName = args.getString("artist");
 
         parcelableTracks = new ArrayList<ParcelableTrack>();
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
+        Log.d(TAG, "searching for artist " + artistName);
         spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
             @Override
             public void success(TracksPager tracksPager, Response response) {
@@ -160,6 +165,7 @@ public class TrackListFragment extends ListFragment {
                     }
                 });
 
+                Log.d(TAG, "calling updateAdapter");
                 updateAdapter(sr);
 
             }
@@ -170,15 +176,17 @@ public class TrackListFragment extends ListFragment {
 
     synchronized private void updateAdapter(List<ParcelableTrack> sr) {
         final ListIterator<ParcelableTrack> parcelableTrackListIterator = sr.listIterator();
+        Log.d(TAG, "updateAdapter");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 int id = 0;
 
                 trackResultsAdapter.clear();
+                Log.d(TAG, "starting while loop");
                 while (parcelableTrackListIterator.hasNext()) {
                     ParcelableTrack parcelableTrack = parcelableTrackListIterator.next();
-                    Log.d(TAG, "got " + id + " " + parcelableTrack.getMyTrack().name);
+                    Log.d(TAG, "TLF got " + id + " " + parcelableTrack.getMyTrack().name);
 
                     TrackResult srItem = new TrackResult(id, parcelableTrack.getMyTrack());
 
