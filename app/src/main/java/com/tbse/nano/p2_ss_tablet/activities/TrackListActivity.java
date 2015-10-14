@@ -1,36 +1,18 @@
 package com.tbse.nano.p2_ss_tablet.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.Tracks;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * An activity representing a single TrackList detail screen. This
@@ -44,9 +26,9 @@ import retrofit.client.Response;
 
 public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
+    public static final String TAG = "Nano-TLA";
     private TrackListFragment trackListFragment;
     private ArrayList<ParcelableTrack> parcelableTracks;
-    public static final String TAG = "Nano-TLA";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -57,41 +39,6 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         trackListFragment.setActivateOnItemClick(true);
 
         Log.d(TAG, "intent is " + getIntent().toUri(1));
-
-        SpotifyApi api = new SpotifyApi();
-        final SpotifyService spotify = api.getService();
-        Log.d(TAG, "searching for " + getIntent().getStringExtra("artist"));
-        spotify.searchTracks("artist:" + getIntent().getStringExtra("artist"), new Callback<TracksPager>() {
-            @Override
-            public void success(TracksPager tracksPager, Response response) {
-                Pager<Track> pager = tracksPager.tracks;
-                if (pager.items.size() == 0) {
-                    Log.d(TAG, "TODO: clearing list from searchSpotify");
-//                          TODO: clearTrackResultsList();
-                    return;
-                }
-
-                int c = 0;
-                if (savedInstanceState == null) {
-                    parcelableTracks = new ArrayList<ParcelableTrack>();
-                    for (Track t : pager.items) {
-                        ParcelableTrack parcelableTrack;
-                        parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
-                        parcelableTrack.setMyTrack(t);
-                        parcelableTracks.add(parcelableTrack);
-                        c++;
-                    }
-
-                    trackListFragment.populateSearchResultsList(parcelableTracks);
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "failure: " + error.getBody());
-            }
-        });
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -154,6 +101,7 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         super.onRestoreInstanceState(savedInstanceState);
 
         parcelableTracks = savedInstanceState.getParcelableArrayList("parcelableTracks");
+        Log.d(TAG, "populating track list from onRestoreInstanceState");
         trackListFragment.populateSearchResultsList(parcelableTracks);
     }
 }

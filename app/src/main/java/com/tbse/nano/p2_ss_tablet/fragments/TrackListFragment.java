@@ -79,12 +79,14 @@ public class TrackListFragment extends ListFragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public TrackListFragment() {
+        Log.d(TAG, "in TrackListFragment constructor");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "making new track results adapter");
         trackResultsAdapter = new TrackResultsAdapter(getContext());
         setListAdapter(trackResultsAdapter);
 
@@ -120,6 +122,7 @@ public class TrackListFragment extends ListFragment {
                     c++;
                 }
 
+                Log.d(TAG, "populating tracks from TrackListFragment");
                 populateSearchResultsList(parcelableTracks);
 
             }

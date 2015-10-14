@@ -3,11 +3,8 @@ package com.tbse.nano.p2_ss_tablet.models;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
 
@@ -36,6 +33,7 @@ public class ArtistSearchResult {
 
     static {
         // Add some sample items.
+        Log.d(TAG, "startin static block to add " + COUNT + " sample items");
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
@@ -80,7 +78,7 @@ public class ArtistSearchResult {
 
         @Override
         public String toString() {
-            return getArtistName();
+            return "id: " + id + " artist: " + getArtistName();
         }
 
         public String getGenre() {

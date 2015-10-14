@@ -45,7 +45,7 @@ import retrofit.client.Response;
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link ArtistSearchResultListFragment} and the item details
- * (if present) is a {@link AlbumSearResultListFragment}.
+ * (if present) is a {@link PlayTrackFragment}.
  * <p/>
  * This activity also implements the required
  * {@link ArtistSearchResultListFragment.Callbacks} interface
@@ -89,9 +89,13 @@ public class ArtistSearchActivity extends AppCompatActivity
                     }
 
                     parcelableArtists = new ArrayList<ParcelableArtist>();
+                    int id = 0;
                     for (Artist artist : pager.items) {
+                        ArtistSearchResult.SearchResultItem searchResultItem = new ArtistSearchResult.SearchResultItem(""+id, artist);
+                        ArtistSearchResult.ITEMS.add(searchResultItem);
                         ParcelableArtist parcelableArtist = new ParcelableArtist(artist);
                         parcelableArtists.add(parcelableArtist);
+                        ++id;
                     }
 
                     artistSearchResultListFragment.populateSearchResultsList(parcelableArtists);
@@ -131,28 +135,15 @@ public class ArtistSearchActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         artistSearchResultListFragment = (ArtistSearchResultListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.artistsearchresult_list);
 
         if (findViewById(R.id.tracklist_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-large and
-            // res/values-sw600dp). If this view is present, then the
-            // activity should be in two-pane mode.
+            Log.d(TAG, "is in 2-pane mode");
             mTwoPane = true;
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-
             artistSearchResultListFragment.setActivateOnItemClick(true);
         }
 
@@ -206,6 +197,7 @@ public class ArtistSearchActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (hasBeenRestored) {
+            Log.d(TAG, "has been resumed");
             artistSearchResultListFragment.populateSearchResultsList(parcelableArtists);
             getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -266,10 +258,13 @@ public class ArtistSearchActivity extends AppCompatActivity
      */
     @Override
     public void onItemSelected(String id) {
-        String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
         for (ArtistSearchResult.SearchResultItem searchResultItem: ArtistSearchResult.ITEMS) {
-            Log.d(TAG, "ASA selected item: " + id + " " + searchResultItem.toString());
+            Log.d(TAG, "ArtistSearchResult.ITEMS item: " + searchResultItem.getId() + " " + searchResultItem.toString());
         }
+
+        String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
+        Log.d(TAG, "selected id " + id + " artist " + artist);
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

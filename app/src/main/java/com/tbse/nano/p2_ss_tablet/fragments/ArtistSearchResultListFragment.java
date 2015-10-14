@@ -149,6 +149,9 @@ public class ArtistSearchResultListFragment extends ListFragment {
 
                     Artist srArtist = parcelableArtist.getArtist();
 
+                    ArtistSearchResult.SearchResultItem searchResultItem = new ArtistSearchResult.SearchResultItem(id, srArtist);
+                    ArtistSearchResult.ITEMS.add()
+
                     Log.d(TAG, "artist is " + srArtist);
 
                     ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
