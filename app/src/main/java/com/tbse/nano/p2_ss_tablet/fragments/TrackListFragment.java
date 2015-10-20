@@ -89,14 +89,20 @@ public class TrackListFragment extends ListFragment {
         setListAdapter(trackResultsAdapter);
 
         Bundle args = getArguments();
-        String artistName = args.getString("artist");
+        String artistName;
+        if (args == null) {
+            Log.e(TAG, "started TrackListFragment with null args");
+            return;
+        } else {
+            artistName = args.getString("artist");
+        }
 
         parcelableTracks = new ArrayList<ParcelableTrack>();
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
         spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
-            @Override
+           @Override
             public void success(TracksPager tracksPager, Response response) {
                 Pager<Track> pager = tracksPager.tracks;
                 if (pager.items.size() == 0) {

@@ -3,30 +3,21 @@ package com.tbse.nano.p2_ss_tablet.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.Tracks;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -51,10 +42,15 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tracklist);
+        setContentView(R.layout.tracklist_app_bar);
 
         trackListFragment = (TrackListFragment) getSupportFragmentManager().findFragmentById(R.id.trackresult_list);
         trackListFragment.setActivateOnItemClick(true);
+
+        if (savedInstanceState != null) {
+            trackListFragment.populateSearchResultsList(parcelableTracks);
+            return;
+        }
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
@@ -97,18 +93,19 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-//            arguments.putString(TrackListFragment.ARG_ITEM_ID,
-//                    getIntent().getStringExtra(TrackListFragment.ARG_ITEM_ID));
-            TrackListFragment fragment = new TrackListFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.trackresult_list, fragment)
-                    .commit();
-        }
+//        if (savedInstanceState == null) {
+//            // Create the detail fragment and add it to the activity
+//            // using a fragment transaction.
+//            Bundle arguments = new Bundle();
+//            arguments.putString("artist", "mc");
+////            arguments.putString(TrackListFragment.ARG_ITEM_ID,
+////                    getIntent().getStringExtra(TrackListFragment.ARG_ITEM_ID));
+//            TrackListFragment fragment = new TrackListFragment();
+//            fragment.setArguments(arguments);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.trackresult_list, fragment)
+//                    .commit();
+//        }
     }
 
     @Override

@@ -45,7 +45,7 @@ import retrofit.client.Response;
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link ArtistSearchResultListFragment} and the item details
- * (if present) is a {@link AlbumSearResultListFragment}.
+ * (if present) is a {@link AlbumSearchResultListFragment}.
  * <p/>
  * This activity also implements the required
  * {@link ArtistSearchResultListFragment.Callbacks} interface
@@ -55,7 +55,7 @@ import retrofit.client.Response;
 public class ArtistSearchActivity extends AppCompatActivity
         implements Callbacks {
 
-    public static String TAG = "Nano2";
+    public static String TAG = "Nano";
     private static MediaPlayer mediaPlayer;
     SearchView searchView;
     /**
@@ -141,7 +141,7 @@ public class ArtistSearchActivity extends AppCompatActivity
 //        });
 
         artistSearchResultListFragment = (ArtistSearchResultListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.artistsearchresult_list);
+                .findFragmentById(R.id.artist_search_result_list);
 
         if (findViewById(R.id.tracklist_container) != null) {
             // The detail container view will be present only in the
@@ -284,7 +284,7 @@ public class ArtistSearchActivity extends AppCompatActivity
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            Log.d(TAG, "phone screen");
+            Log.d(TAG, "phone screen with " + artist);
             Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
             trackListActivityIntent.putExtra("artist", artist);
             startActivity(trackListActivityIntent);

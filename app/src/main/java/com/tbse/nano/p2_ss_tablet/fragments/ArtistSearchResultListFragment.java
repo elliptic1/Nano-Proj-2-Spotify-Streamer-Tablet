@@ -27,7 +27,7 @@ import kaaes.spotify.webapi.android.models.Artist;
  * A list fragment representing a list of SearchResults. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link AlbumSearResultListFragment}.
+ * currently being viewed in a {@link AlbumSearchResultListFragment}.
  * <p/>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
@@ -35,7 +35,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 public class ArtistSearchResultListFragment extends ListFragment {
 
-    public static String TAG = ArtistSearchActivity.TAG + "-SRLFrag";
+    public static String TAG = ArtistSearchActivity.TAG + "-ASRLFrag";
 
     private ArtistSearchResultsAdapter artistSearchResultsAdapter;
 
@@ -135,6 +135,8 @@ public class ArtistSearchResultListFragment extends ListFragment {
                 int id = 0;
 
                 artistSearchResultsAdapter.clear();
+                ArtistSearchResult.ITEMS.clear();
+
                 while (parcelableArtistListIterator.hasNext()) {
                     ParcelableArtist parcelableArtist = parcelableArtistListIterator.next();
                     if (parcelableArtist == null) {
@@ -150,6 +152,10 @@ public class ArtistSearchResultListFragment extends ListFragment {
                     Artist srArtist = parcelableArtist.getArtist();
 
                     ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
+
+                    ArtistSearchResult.addItem(srItem);
+
+                    Log.d(TAG, "Now ITEMS is " + ArtistSearchResult.ITEMS);
 
                     artistSearchResultsAdapter.add(srItem);
 

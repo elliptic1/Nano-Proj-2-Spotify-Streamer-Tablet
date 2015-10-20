@@ -31,14 +31,7 @@ public class ArtistSearchResult {
 
     private static final int COUNT = 25;
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
-    }
-
-    private static void addItem(SearchResultItem item) {
+    public static void addItem(SearchResultItem item) {
         ITEMS.add(item);
 //        ITEM_MAP.put(item.getId(), item);
     }

@@ -1,5 +1,5 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/artistsearchresult_list"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/artist_search_result_list"
     android:name="com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_marginLeft="16dp" android:layout_marginRight="16dp"

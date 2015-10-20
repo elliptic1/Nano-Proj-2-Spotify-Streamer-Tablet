@@ -11,7 +11,7 @@
     
     -->
 
-    <fragment android:id="@+id/artistsearchresult_list" android:name="com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment"
+    <fragment android:id="@+id/artist_search_result_list" android:name="com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment"
         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
         tools:layout="@android:layout/list_content" />
 

@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/track_result_item" />
+        <include layout="@layout/track_list_fragment" />
     </FrameLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
