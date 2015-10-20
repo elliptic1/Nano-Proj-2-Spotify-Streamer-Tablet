@@ -1,5 +1,6 @@
 package com.tbse.nano.p2_ss_tablet;
 
 public interface Callbacks {
-    void onItemSelected(String id);
+    void onArtistSelected(int id);
+    void onTrackSelected(int id);
 }

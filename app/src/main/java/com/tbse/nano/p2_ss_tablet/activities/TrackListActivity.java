@@ -1,5 +1,6 @@
 package com.tbse.nano.p2_ss_tablet.activities;
 
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,10 @@ import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Receiver;
+import org.androidannotations.annotations.ReceiverAction;
 
 import java.util.ArrayList;
 
@@ -38,12 +42,12 @@ import retrofit.client.Response;
  * more than a {@link TrackListFragment}.
  */
 
+@EActivity
 public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     private TrackListFragment trackListFragment;
     private ArrayList<ParcelableTrack> parcelableTracks;
     public static final String TAG = "Nano";
-
     private PlayTrackFragment playTrackFragment;
 
     @Override
@@ -133,38 +137,6 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
     }
 
     @Override
-    public void onItemSelected(String id) {
-        ParcelableTrack parcelableTrack = parcelableTracks.get(Integer.parseInt(id) - 1);
-        Log.d(TAG, "TLA item " + id + " selected: " + parcelableTrack);
-
-        playTrack(Integer.parseInt(id)-1);
-
-    }
-
-    void playTrack(int trackNumber) {
-        Log.d(TAG, "got play track intent: " + trackNumber);
-
-        if (trackNumber >= parcelableTracks.size()) return;
-
-        if (playTrackFragment != null) {
-            try {
-                playTrackFragment.dismiss();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
-        Bundle b = new Bundle();
-        TrackResult trackResult = new TrackResult(trackNumber, parcelableTracks.get(trackNumber).getMyTrack());
-        b.putParcelable("track", trackResult);
-        b.putInt("trackNum", trackNumber);
-        b.putInt("numberOfSearchResults", parcelableTracks.size());
-        playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
-        playTrackFragment.show(getFragmentManager(), "track");
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("parcelableTracks", parcelableTracks);
         super.onSaveInstanceState(outState);
@@ -176,5 +148,35 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
         parcelableTracks = savedInstanceState.getParcelableArrayList("parcelableTracks");
         trackListFragment.populateSearchResultsList(parcelableTracks);
+    }
+
+    @Override
+    public void onArtistSelected(int id) {
+
+    }
+
+    @Override
+    public void onTrackSelected(int id) {
+        Log.d(TAG, "track selected: " + id);
+
+        playTrack(id);
+
+    }
+
+    @Receiver(actions="action_play_track", local=true)
+    void playTrack(@Receiver.Extra int trackNum) {
+        Log.d(TAG, "got play track intent: " + trackNum);
+
+        if (playTrackFragment != null && playTrackFragment.isVisible()) {
+            playTrackFragment.dismiss();
+        }
+
+        Bundle b = new Bundle();
+        b.putParcelable("track", parcelableTracks.get(trackNum));
+        b.putInt("trackNum", trackNum);
+        b.putInt("numberOfSearchResults", parcelableTracks.size());
+        playTrackFragment = new PlayTrackFragment_();
+        playTrackFragment.setArguments(b);
+        playTrackFragment.show(getFragmentManager(), "track");
     }
 }

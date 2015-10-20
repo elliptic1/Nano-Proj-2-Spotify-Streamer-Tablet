@@ -40,9 +40,9 @@ public class ArtistSearchResult {
 //        return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
 //    }
 
-    private static SearchResultItem createDummyItem(int position) {
-        return new SearchResultItem(""+position, new Artist());
-    }
+//    private static SearchResultItem createDummyItem(int position) {
+//        return new SearchResultItem(position, new Artist());
+//    }
 
 //    private static String makeDetails(int position) {
 //        StringBuilder builder = new StringBuilder();
@@ -54,14 +54,14 @@ public class ArtistSearchResult {
 //    }
 
     public static class SearchResultItem {
-        private String id;
+        private int id;
         private Artist artist;
 
-        public String getId() {
+        public int getId() {
             return id;
         }
 
-        public SearchResultItem(String id, Artist artist) {
+        public SearchResultItem(int id, Artist artist) {
             this.id = id;
             this.artist = artist;
         }

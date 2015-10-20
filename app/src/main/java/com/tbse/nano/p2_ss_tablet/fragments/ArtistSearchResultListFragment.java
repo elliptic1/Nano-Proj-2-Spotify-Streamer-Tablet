@@ -13,9 +13,6 @@ import com.tbse.nano.p2_ss_tablet.adapters.ArtistSearchResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EFragment;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -62,7 +59,10 @@ public class ArtistSearchResultListFragment extends ListFragment {
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onArtistSelected(int id) {
+        }
+        @Override
+        public void onTrackSelected(int id) {
         }
     };
 
@@ -151,7 +151,7 @@ public class ArtistSearchResultListFragment extends ListFragment {
 
                     Artist srArtist = parcelableArtist.getArtist();
 
-                    ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem("" + id, srArtist);
+                    ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem(id, srArtist);
 
                     ArtistSearchResult.addItem(srItem);
 
@@ -193,7 +193,7 @@ public class ArtistSearchResultListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(ArtistSearchResult.ITEMS.get(position).getId());
+        mCallbacks.onArtistSelected(ArtistSearchResult.ITEMS.get(position).getId());
     }
 
     @Override

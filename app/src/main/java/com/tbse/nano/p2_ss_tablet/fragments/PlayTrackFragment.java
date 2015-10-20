@@ -14,12 +14,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
@@ -79,13 +81,8 @@ public class PlayTrackFragment extends DialogFragment {
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            TrackResult tr = getArguments().getParcelable("track");
-            if (tr == null) {
-                Log.e(TAG, "track result is null");
-                return;
-            }
-
-            startAudio(tr.getTrack().preview_url);
+            ParcelableTrack tr = getArguments().getParcelable("track");
+            startAudio(tr.getMyTrack().preview_url);
 
         } else if (mPlayerState == PlayerState.PLAYING) {
             mPlayerState = PlayerState.PAUSED;
@@ -132,29 +129,29 @@ public class PlayTrackFragment extends DialogFragment {
             n = 9;
         }
         Log.d(TAG, "now play track " + n);
+
         showingTrackNum = n;
+
         Intent intent = new Intent("action_play_track");
-        intent.putExtra("trackNumber", n);
+        intent.putExtra("trackNum", n);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
     }
 
     @Click(R.id.prev_btn)
     void clickLeft() {
-        Log.d(TAG, "click left, showing " + showingTrackNum);
+        Log.d(TAG, "click left, showing " + (showingTrackNum-1));
         if (showingTrackNum == 0) return;
-        showingTrackNum--;
-        playTrackNum(showingTrackNum);
+        playTrackNum(showingTrackNum-1);
     }
 
     @Click(R.id.next_btn)
     void clickRight() {
         int numberOfSearchResults = getArguments().getInt("numberOfSearchResults") > 10 ?
                 10 : getArguments().getInt("numberOfSearchResults");
-        Log.d(TAG, "click right, showing " + showingTrackNum
+        Log.d(TAG, "click right, showing " + (showingTrackNum+1)
                 + " numResults-1 = " + (numberOfSearchResults - 1));
         if (showingTrackNum == numberOfSearchResults - 1) return;
-        showingTrackNum++;
-        playTrackNum(showingTrackNum);
+        playTrackNum(showingTrackNum+1);
     }
 
     @Override
@@ -169,7 +166,12 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
-        TrackResult tr = getArguments().getParcelable("track");
+        if (getArguments() == null || getArguments().getParcelable("track") == null) {
+            return;
+        }
+
+        TrackResult tr = new TrackResult(getArguments().getInt("index"),
+            ((ParcelableTrack) getArguments().getParcelable("track")).getMyTrack());
         if (tr == null) {
             Log.d(TAG, "tr is null");
             return;
@@ -202,6 +204,8 @@ public class PlayTrackFragment extends DialogFragment {
         }
 
     }
+
+
 
     @Override
     public void onResume() {

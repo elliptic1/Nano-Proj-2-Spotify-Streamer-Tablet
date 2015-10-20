@@ -1,8 +1,10 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -12,6 +14,8 @@ import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+
+import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +73,10 @@ public class TrackListFragment extends ListFragment {
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onTrackSelected(int id) {
+        }
+        @Override
+        public void onArtistSelected(int id) {
         }
     };
 
@@ -181,6 +188,7 @@ public class TrackListFragment extends ListFragment {
             public void run() {
                 int id = 0;
 
+                TrackResult.ITEMS.clear();
                 trackResultsAdapter.clear();
                 while (parcelableTrackListIterator.hasNext()) {
                     ParcelableTrack parcelableTrack = parcelableTrackListIterator.next();
@@ -189,6 +197,9 @@ public class TrackListFragment extends ListFragment {
                     TrackResult srItem = new TrackResult(id, parcelableTrack.getMyTrack());
 
                     trackResultsAdapter.add(srItem);
+
+                    TrackResult.TrackResultItem trackResultItem = new TrackResult.TrackResultItem(id, parcelableTrack.getMyTrack());
+                    TrackResult.ITEMS.add(trackResultItem);
 
                     ++id;
                 }
@@ -223,7 +234,15 @@ public class TrackListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(TrackResult.ITEMS.get(position).getId());
+        mCallbacks.onTrackSelected(TrackResult.ITEMS.get(position).getId());
+
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("track", TrackResult.ITEMS.get(position).getParcelableTrack());
+//        Intent intent = new Intent("action_play_track");
+//        intent.putExtra("position", position);
+//        intent.putExtra("total", TrackResult.ITEMS.size());
+//        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+
     }
 
     @Override

@@ -17,7 +17,6 @@ import hugo.weaving.DebugLog;
 import kaaes.spotify.webapi.android.models.Image;
 
 @EViewGroup(R.layout.track_result_item)
-@DebugLog
 public class TrackResultView extends LinearLayout {
 
     @ViewById(R.id.item_track_text_view)

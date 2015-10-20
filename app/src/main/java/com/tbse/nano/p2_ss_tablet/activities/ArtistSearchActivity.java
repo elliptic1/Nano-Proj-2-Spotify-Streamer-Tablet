@@ -19,7 +19,6 @@ import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
 
@@ -28,8 +27,6 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -260,13 +257,17 @@ public class ArtistSearchActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onTrackSelected(int ignore) {
+
+    }
     /**
      * Callback method from {@link ArtistSearchResultListFragment.Callbacks}
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(String id) {
-        String artist = ArtistSearchResult.ITEMS.get(Integer.parseInt(id)).getArtistName();
+    public void onArtistSelected(int id) {
+        String artist = ArtistSearchResult.ITEMS.get(id).getArtistName();
         Log.d(TAG, "selected artist: " + artist);
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
@@ -285,7 +286,7 @@ public class ArtistSearchActivity extends AppCompatActivity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Log.d(TAG, "phone screen with " + artist);
-            Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
+            Intent trackListActivityIntent = new Intent(this, TrackListActivity_.class);
             trackListActivityIntent.putExtra("artist", artist);
             startActivity(trackListActivityIntent);
         }

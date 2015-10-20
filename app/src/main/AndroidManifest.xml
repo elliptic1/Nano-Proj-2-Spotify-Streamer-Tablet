@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.TrackListActivity"
+            android:name=".activities.TrackListActivity_"
             android:label="@string/title_searchresult_detail"
             android:parentActivityName=".activities.ArtistSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" >
