@@ -9,8 +9,13 @@ import android.view.MenuItem;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+
+import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 
@@ -38,6 +43,8 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
     private TrackListFragment trackListFragment;
     private ArrayList<ParcelableTrack> parcelableTracks;
     public static final String TAG = "Nano";
+
+    private PlayTrackFragment playTrackFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +134,34 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     @Override
     public void onItemSelected(String id) {
+        ParcelableTrack parcelableTrack = parcelableTracks.get(Integer.parseInt(id) - 1);
+        Log.d(TAG, "TLA item " + id + " selected: " + parcelableTrack);
 
+        playTrack(Integer.parseInt(id)-1);
+
+    }
+
+    void playTrack(int trackNumber) {
+        Log.d(TAG, "got play track intent: " + trackNumber);
+
+        if (trackNumber >= parcelableTracks.size()) return;
+
+        if (playTrackFragment != null) {
+            try {
+                playTrackFragment.dismiss();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+
+        Bundle b = new Bundle();
+        TrackResult trackResult = new TrackResult(trackNumber, parcelableTracks.get(trackNumber).getMyTrack());
+        b.putParcelable("track", trackResult);
+        b.putInt("trackNum", trackNumber);
+        b.putInt("numberOfSearchResults", parcelableTracks.size());
+        playTrackFragment = new PlayTrackFragment_();
+        playTrackFragment.setArguments(b);
+        playTrackFragment.show(getFragmentManager(), "track");
     }
 
     @Override
