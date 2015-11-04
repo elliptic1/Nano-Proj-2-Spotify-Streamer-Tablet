@@ -1,11 +1,9 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,20 +11,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
+import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
 
 import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Track;
 
 @EFragment(R.layout.play_track)
 public class PlayTrackFragment extends DialogFragment {
@@ -46,25 +43,25 @@ public class PlayTrackFragment extends DialogFragment {
     @ViewById(R.id.next_btn)
     ImageView nextBtn;
 
+    private static String TAG = MainActivity.TAG + "-PTF";
+
+    private static Track selectedTrack;
+
     private enum PlayerState {PLAYING, PAUSED}
 
     private PlayerState mPlayerState = PlayerState.PAUSED;
-
     private static int showingTrackNum = 0;
-
     private int numberOfSearchResults = 0;
 
-    private static String TAG = ArtistSearchActivity.TAG;
-
     public PlayTrackFragment() {
-        Log.d(TAG, "PTF constr");
+        Log.d(TAG, "constr");
     }
 
     @Click(R.id.middle_btn)
     void clickMiddle() {
         // TODO play / pause
 
-        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
 
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -74,15 +71,19 @@ public class PlayTrackFragment extends DialogFragment {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        ArtistSearchActivity.setMediaPlayer(mediaPlayer);
+        MainActivity.setMediaPlayer(mediaPlayer);
 
         if (mPlayerState == PlayerState.PAUSED) {
             mPlayerState = PlayerState.PLAYING;
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            ParcelableTrack tr = getArguments().getParcelable("track");
-            startAudio(tr.getMyTrack().preview_url);
+            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
+            if (tr == null) {
+                Log.e(TAG, "tr was null");
+                return;
+            }
+            startAudio(tr.getTrack().preview_url);
 
         } else if (mPlayerState == PlayerState.PLAYING) {
             mPlayerState = PlayerState.PAUSED;
@@ -91,7 +92,7 @@ public class PlayTrackFragment extends DialogFragment {
 
             mediaPlayer.release();
 
-            ArtistSearchActivity.setMediaPlayer(null);
+            MainActivity.setMediaPlayer(null);
 
         }
 
@@ -99,7 +100,7 @@ public class PlayTrackFragment extends DialogFragment {
 
     @Background
     void startAudio(String track_prev_url) {
-        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
         try {
             if (mediaPlayer.isPlaying()) {
                 return;
@@ -132,26 +133,30 @@ public class PlayTrackFragment extends DialogFragment {
 
         showingTrackNum = n;
 
-        Intent intent = new Intent("action_play_track");
-        intent.putExtra("trackNum", n);
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+        Bundle b = new Bundle();
+        b.putSerializable("track", new TrackResult(n, selectedTrack));
+        b.putInt("trackNum", n);
+        b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
+        PlayTrackFragment playTrackFragment = new PlayTrackFragment_();
+        playTrackFragment.setArguments(b);
+        playTrackFragment.show(getFragmentManager(), "track");
     }
 
     @Click(R.id.prev_btn)
     void clickLeft() {
-        Log.d(TAG, "click left, showing " + (showingTrackNum-1));
+        Log.d(TAG, "click left, showing " + (showingTrackNum - 1));
         if (showingTrackNum == 0) return;
-        playTrackNum(showingTrackNum-1);
+        playTrackNum(showingTrackNum - 1);
     }
 
     @Click(R.id.next_btn)
     void clickRight() {
         int numberOfSearchResults = getArguments().getInt("numberOfSearchResults") > 10 ?
                 10 : getArguments().getInt("numberOfSearchResults");
-        Log.d(TAG, "click right, showing " + (showingTrackNum+1)
+        Log.d(TAG, "click right, showing " + (showingTrackNum + 1)
                 + " numResults-1 = " + (numberOfSearchResults - 1));
         if (showingTrackNum == numberOfSearchResults - 1) return;
-        playTrackNum(showingTrackNum+1);
+        playTrackNum(showingTrackNum + 1);
     }
 
     @Override
@@ -159,6 +164,12 @@ public class PlayTrackFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, getTheme());
 
+        try {
+            selectedTrack = ((TrackResult) getArguments().getSerializable("track")).getTrack();
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate is using a new track");
+            selectedTrack = new Track();
+        }
     }
 
     @AfterViews
@@ -166,18 +177,9 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
-        if (getArguments() == null || getArguments().getParcelable("track") == null) {
-            return;
-        }
+        Log.d(TAG, "currently the selected track is " + selectedTrack);
 
-        TrackResult tr = new TrackResult(getArguments().getInt("index"),
-            ((ParcelableTrack) getArguments().getParcelable("track")).getMyTrack());
-        if (tr == null) {
-            Log.d(TAG, "tr is null");
-            return;
-        }
-
-        showingTrackNum = tr.getTrackIndex();
+        TrackResult tr = new TrackResult(showingTrackNum, selectedTrack);
 
         Log.d(TAG, "artist: " + tr.getTrack().artists.get(0).name);
         artistName.setText(tr.getTrack().artists.get(0).name);
@@ -206,11 +208,10 @@ public class PlayTrackFragment extends DialogFragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
-        MediaPlayer mediaPlayer = ArtistSearchActivity.getMediaPlayer();
+        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
         if (mediaPlayer == null) {
             mPlayerState = PlayerState.PAUSED;
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);

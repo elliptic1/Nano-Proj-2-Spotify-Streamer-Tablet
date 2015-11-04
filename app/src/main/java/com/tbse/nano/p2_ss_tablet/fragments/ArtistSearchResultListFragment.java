@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
-import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.ArtistSearchResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
@@ -32,7 +32,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 public class ArtistSearchResultListFragment extends ListFragment {
 
-    public static String TAG = ArtistSearchActivity.TAG + "-ASRLFrag";
+    public static String TAG = MainActivity.TAG + "-ASRLFrag";
 
     private ArtistSearchResultsAdapter artistSearchResultsAdapter;
 
@@ -151,7 +151,8 @@ public class ArtistSearchResultListFragment extends ListFragment {
 
                     Artist srArtist = parcelableArtist.getArtist();
 
-                    ArtistSearchResult.SearchResultItem srItem = new ArtistSearchResult.SearchResultItem(id, srArtist);
+                    ArtistSearchResult.SearchResultItem srItem =
+                            new ArtistSearchResult.SearchResultItem(id, srArtist);
 
                     ArtistSearchResult.addItem(srItem);
 

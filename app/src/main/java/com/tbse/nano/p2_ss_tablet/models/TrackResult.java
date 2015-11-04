@@ -4,20 +4,37 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.tbse.nano.p2_ss_tablet.activities.ArtistSearchActivity;
+import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.AlbumSimple;
-import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class TrackResult implements Parcelable {
+public class TrackResult implements Serializable, Parcelable {
 
     private Track track;
     public static List<TrackResult.TrackResultItem> ITEMS = new ArrayList<TrackResult.TrackResultItem>();
+
+    protected TrackResult(Parcel in) {
+        trackIndex = in.readInt();
+        track = ((TrackResult) in.readSerializable()).getTrack();
+    }
+
+    public static final Creator<TrackResult> CREATOR = new Creator<TrackResult>() {
+        @Override
+        public TrackResult createFromParcel(Parcel in) {
+            return new TrackResult(in);
+        }
+
+        @Override
+        public TrackResult[] newArray(int size) {
+            return new TrackResult[size];
+        }
+    };
 
     public int getTrackIndex() {
         return trackIndex;
@@ -34,24 +51,9 @@ public class TrackResult implements Parcelable {
         this.trackIndex = index;
     }
 
-    protected TrackResult(Parcel in) {
-    }
-
-    public static final Creator<TrackResult> CREATOR = new Creator<TrackResult>() {
-        @Override
-        public TrackResult createFromParcel(Parcel in) {
-            return new TrackResult(in);
-        }
-
-        @Override
-        public TrackResult[] newArray(int size) {
-            return new TrackResult[size];
-        }
-    };
-
     public Track getTrack() {
         if (track == null) {
-            Log.d(ArtistSearchActivity.TAG, "getting new empty track");
+            Log.d(MainActivity.TAG, "getting new empty track");
             track = new Track();
         }
         return track;
@@ -78,37 +80,20 @@ public class TrackResult implements Parcelable {
         return null;
     }
 
-    /**
-     * A map of sample (dummy) items, by ID.
-     */
-//    public static Map<String, SearchResultItem> ITEM_MAP = new HashMap<String, SearchResultItem>();
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-//    private static final int COUNT = 25;
-
-//    static {
-//        // Add some sample items.
-//        for (int i = 1; i <= COUNT; i++) {
-//            addItem(createDummyItem(i));
-//        }
-//    }
-
-//    private static void addItem(TrackResultItem item) {
-//        ITEMS.add(item);
-//        ITEM_MAP.put(item.getId(), item);
-//    }
-
-//    public ArtistSearchResult.SearchResultItem getItem(int n) {
-//        return n > 0 && ITEMS.size() > 0 && n < ITEMS.size() ? ITEMS.get(n) : null;
-//    }
-
-//    private static TrackResultItem createDummyItem(int position) {
-//        return new TrackResultItem(""+position, new Track());
-//    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(trackIndex);
+        dest.writeSerializable(this);
+    }
 
     public static class TrackResultItem {
         private int id;
         private Track track;
-        private ParcelableTrack parcelableTrack;
 
         public int getId() {
             return id;
@@ -117,8 +102,6 @@ public class TrackResult implements Parcelable {
         public TrackResultItem(int id, Track track) {
             this.id = id;
             this.track = track;
-            parcelableTrack = new ParcelableTrack(null);
-            parcelableTrack.setMyTrack(this.track);
         }
 
         @Override
@@ -153,19 +136,6 @@ public class TrackResult implements Parcelable {
             return track;
         }
 
-        public ParcelableTrack getParcelableTrack() {
-            return parcelableTrack;
-        }
-
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
     }
 
     @Override

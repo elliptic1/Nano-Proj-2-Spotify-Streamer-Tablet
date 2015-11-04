@@ -1,10 +1,8 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -12,10 +10,7 @@ import android.widget.ListView;
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
-
-import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +60,7 @@ public class TrackListFragment extends ListFragment {
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private ArrayList<ParcelableTrack> parcelableTracks;
+    private ArrayList<TrackResult> trackResults;
 
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
@@ -75,6 +70,7 @@ public class TrackListFragment extends ListFragment {
         @Override
         public void onTrackSelected(int id) {
         }
+
         @Override
         public void onArtistSelected(int id) {
         }
@@ -104,12 +100,12 @@ public class TrackListFragment extends ListFragment {
             artistName = args.getString("artist");
         }
 
-        parcelableTracks = new ArrayList<ParcelableTrack>();
+        trackResults = new ArrayList<TrackResult>();
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
         spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
-           @Override
+            @Override
             public void success(TracksPager tracksPager, Response response) {
                 Pager<Track> pager = tracksPager.tracks;
                 if (pager.items.size() == 0) {
@@ -119,16 +115,13 @@ public class TrackListFragment extends ListFragment {
                 }
 
                 int c = 0;
-                parcelableTracks.clear();
+                trackResults.clear();
                 for (Track t : pager.items) {
-                    ParcelableTrack parcelableTrack;
-                    parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
-                    parcelableTrack.setMyTrack(t);
-                    parcelableTracks.add(parcelableTrack);
+                    trackResults.add(new TrackResult(c, t));
                     c++;
                 }
 
-                populateSearchResultsList(parcelableTracks);
+                populateSearchResultsList(trackResults);
 
             }
 
@@ -137,7 +130,6 @@ public class TrackListFragment extends ListFragment {
                 Log.e(TAG, "failure: " + error.getBody());
             }
         });
-
 
     }
 
@@ -152,8 +144,7 @@ public class TrackListFragment extends ListFragment {
         }
     }
 
-
-    public void populateSearchResultsList(final List<ParcelableTrack> sr) {
+    public void populateSearchResultsList(final List<TrackResult> sr) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -166,10 +157,10 @@ public class TrackListFragment extends ListFragment {
                 }
 
                 // sort by popularity
-                Collections.sort(sr, new Comparator<ParcelableTrack>() {
+                Collections.sort(sr, new Comparator<TrackResult>() {
                     @Override
-                    public int compare(ParcelableTrack lhs, ParcelableTrack rhs) {
-                        return rhs.getMyTrack().popularity - lhs.getMyTrack().popularity;
+                    public int compare(TrackResult lhs, TrackResult rhs) {
+                        return rhs.getTrack().popularity - lhs.getTrack().popularity;
                     }
                 });
 
@@ -177,12 +168,12 @@ public class TrackListFragment extends ListFragment {
 
             }
 
-           }).start();
+        }).start();
 
     }
 
-    synchronized private void updateAdapter(List<ParcelableTrack> sr) {
-        final ListIterator<ParcelableTrack> parcelableTrackListIterator = sr.listIterator();
+    synchronized private void updateAdapter(List<TrackResult> sr) {
+        final ListIterator<TrackResult> parcelableTrackListIterator = sr.listIterator();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -191,14 +182,15 @@ public class TrackListFragment extends ListFragment {
                 TrackResult.ITEMS.clear();
                 trackResultsAdapter.clear();
                 while (parcelableTrackListIterator.hasNext()) {
-                    ParcelableTrack parcelableTrack = parcelableTrackListIterator.next();
-                    Log.d(TAG, "got " + id + " " + parcelableTrack.getMyTrack().name);
+                    TrackResult parcelableTrack = parcelableTrackListIterator.next();
+                    Log.d(TAG, "got " + id + " " + parcelableTrack.getTrack().name);
 
-                    TrackResult srItem = new TrackResult(id, parcelableTrack.getMyTrack());
+                    TrackResult srItem = new TrackResult(id, parcelableTrack.getTrack());
 
                     trackResultsAdapter.add(srItem);
 
-                    TrackResult.TrackResultItem trackResultItem = new TrackResult.TrackResultItem(id, parcelableTrack.getMyTrack());
+                    TrackResult.TrackResultItem trackResultItem =
+                            new TrackResult.TrackResultItem(id, parcelableTrack.getTrack());
                     TrackResult.ITEMS.add(trackResultItem);
 
                     ++id;
@@ -232,16 +224,7 @@ public class TrackListFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
         mCallbacks.onTrackSelected(TrackResult.ITEMS.get(position).getId());
-
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("track", TrackResult.ITEMS.get(position).getParcelableTrack());
-//        Intent intent = new Intent("action_play_track");
-//        intent.putExtra("position", position);
-//        intent.putExtra("total", TrackResult.ITEMS.size());
-//        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
 
     }
 

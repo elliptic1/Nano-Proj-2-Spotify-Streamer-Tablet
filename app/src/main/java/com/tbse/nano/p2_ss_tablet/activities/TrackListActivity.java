@@ -1,6 +1,5 @@
 package com.tbse.nano.p2_ss_tablet.activities;
 
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +12,10 @@ import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
-import com.tbse.nano.p2_ss_tablet.models.ParcelableTrack;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Receiver;
-import org.androidannotations.annotations.ReceiverAction;
 
 import java.util.ArrayList;
 
@@ -46,7 +42,7 @@ import retrofit.client.Response;
 public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     private TrackListFragment trackListFragment;
-    private ArrayList<ParcelableTrack> parcelableTracks;
+    private ArrayList<TrackResult> trackResults;
     public static final String TAG = "Nano";
     private PlayTrackFragment playTrackFragment;
 
@@ -59,7 +55,7 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         trackListFragment.setActivateOnItemClick(true);
 
         if (savedInstanceState != null) {
-            trackListFragment.populateSearchResultsList(parcelableTracks);
+            trackListFragment.populateSearchResultsList(trackResults);
             return;
         }
 
@@ -76,16 +72,13 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
                 }
 
                 int c = 0;
-                parcelableTracks = new ArrayList<ParcelableTrack>();
+                trackResults = new ArrayList<TrackResult>();
                 for (Track t : pager.items) {
-                    ParcelableTrack parcelableTrack;
-                    parcelableTrack = ParcelableTrack.CREATOR.createFromParcel(null);
-                    parcelableTrack.setMyTrack(t);
-                    parcelableTracks.add(parcelableTrack);
+                    trackResults.add(new TrackResult(c, t));
                     c++;
                 }
 
-                trackListFragment.populateSearchResultsList(parcelableTracks);
+                trackListFragment.populateSearchResultsList(trackResults);
 
             }
 
@@ -130,7 +123,7 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, ArtistSearchActivity.class));
+            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -138,7 +131,7 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("parcelableTracks", parcelableTracks);
+        outState.putParcelableArrayList("trackResults", trackResults);
         super.onSaveInstanceState(outState);
     }
 
@@ -146,8 +139,8 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        parcelableTracks = savedInstanceState.getParcelableArrayList("parcelableTracks");
-        trackListFragment.populateSearchResultsList(parcelableTracks);
+        trackResults = savedInstanceState.getParcelableArrayList("trackResults");
+        trackListFragment.populateSearchResultsList(trackResults);
     }
 
     @Override
@@ -172,9 +165,9 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         }
 
         Bundle b = new Bundle();
-        b.putParcelable("track", parcelableTracks.get(trackNum));
+        b.putParcelable("track", trackResults.get(trackNum));
         b.putInt("trackNum", trackNum);
-        b.putInt("numberOfSearchResults", parcelableTracks.size());
+        b.putInt("numberOfSearchResults", trackResults.size());
         playTrackFragment = new PlayTrackFragment_();
         playTrackFragment.setArguments(b);
         playTrackFragment.show(getFragmentManager(), "track");

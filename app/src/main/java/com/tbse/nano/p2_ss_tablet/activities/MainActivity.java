@@ -16,9 +16,12 @@ import android.widget.Toast;
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
+import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
 
@@ -32,28 +35,12 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-/**
- * An activity representing a list of SearchResults. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link TrackListActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- * <p/>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link ArtistSearchResultListFragment} and the item details
- * (if present) is a {@link AlbumSearchResultListFragment}.
- * <p/>
- * This activity also implements the required
- * {@link ArtistSearchResultListFragment.Callbacks} interface
- * to listen for item selections.
- */
-
-public class ArtistSearchActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements Callbacks {
 
     public static String TAG = "Nano";
     private static MediaPlayer mediaPlayer;
+    private PlayTrackFragment playTrackFragment;
     SearchView searchView;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -116,7 +103,7 @@ public class ArtistSearchActivity extends AppCompatActivity
     }
 
     public static void setMediaPlayer(MediaPlayer mediaPlayer) {
-        ArtistSearchActivity.mediaPlayer = mediaPlayer;
+        MainActivity.mediaPlayer = mediaPlayer;
     }
 
     @Override
@@ -219,28 +206,30 @@ public class ArtistSearchActivity extends AppCompatActivity
         }
     }
 
-//    void playTrack(int trackNumber) {
-//        Log.d(TAG, "got play track intent: " + trackNumber);
-//
-//        if (trackNumber >= searchResults.size()) return;
-//
-//        if (playTrackFragment != null) {
-//            try {
-//                playTrackFragment.dismiss();
-//            } catch (Exception e) {
-//                // ignore
-//            }
-//        }
-//
-//        Bundle b = new Bundle();
-//        TrackResult trackResult = new TrackResult(searchResults.get(trackNumber).getTrack(), trackNumber);
-//        b.putParcelable("track", trackResult);
-//        b.putInt("trackNum", trackNumber);
-//        b.putInt("numberOfSearchResults", searchResults.size());
-//        playTrackFragment = new PlayTrackFragment_();
-//        playTrackFragment.setArguments(b);
-//        playTrackFragment.show(getFragmentManager(), "track");
-//    }
+    // For the fragment
+    @Override
+    public void onTrackSelected(int trackNumber) {
+        Log.d(TAG, "got play track intent: " + trackNumber);
+
+        if (trackNumber >= TrackResult.ITEMS.size()) return;
+
+        if (playTrackFragment != null) {
+            try {
+                playTrackFragment.dismiss();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+
+        Bundle b = new Bundle();
+        TrackResult trackResult = new TrackResult(trackNumber, TrackResult.ITEMS.get(trackNumber).getTrack());
+        b.putParcelable("track", trackResult);
+        b.putInt("trackNum", trackNumber);
+        b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
+        playTrackFragment = new PlayTrackFragment_();
+        playTrackFragment.setArguments(b);
+        playTrackFragment.show(getFragmentManager(), "track");
+    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -257,10 +246,6 @@ public class ArtistSearchActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onTrackSelected(int ignore) {
-
-    }
     /**
      * Callback method from {@link ArtistSearchResultListFragment.Callbacks}
      * indicating that the item with the given ID was selected.

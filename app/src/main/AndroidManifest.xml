@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.ArtistSearchActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -22,11 +22,11 @@
         <activity
             android:name=".activities.TrackListActivity_"
             android:label="@string/title_searchresult_detail"
-            android:parentActivityName=".activities.ArtistSearchActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ArtistSearchActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
     </application>
 
