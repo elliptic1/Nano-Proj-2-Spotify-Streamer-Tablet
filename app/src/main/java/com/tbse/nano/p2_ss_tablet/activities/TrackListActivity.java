@@ -1,5 +1,6 @@
 package com.tbse.nano.p2_ss_tablet.activities;
 
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
@@ -39,12 +41,11 @@ import retrofit.client.Response;
  */
 
 @EActivity
-public class TrackListActivity extends AppCompatActivity implements Callbacks {
+public class TrackListActivity extends AppCompatActivity {
 
     private TrackListFragment trackListFragment;
     private ArrayList<TrackResult> trackResults;
-    public static final String TAG = "Nano";
-    private PlayTrackFragment playTrackFragment;
+    public static final String TAG = MainActivity.TAG + "-TLA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,33 +144,4 @@ public class TrackListActivity extends AppCompatActivity implements Callbacks {
         trackListFragment.populateSearchResultsList(trackResults);
     }
 
-    @Override
-    public void onArtistSelected(int id) {
-
-    }
-
-    @Override
-    public void onTrackSelected(int id) {
-        Log.d(TAG, "track selected: " + id);
-
-        playTrack(id);
-
-    }
-
-    @Receiver(actions="action_play_track", local=true)
-    void playTrack(@Receiver.Extra int trackNum) {
-        Log.d(TAG, "got play track intent: " + trackNum);
-
-        if (playTrackFragment != null && playTrackFragment.isVisible()) {
-            playTrackFragment.dismiss();
-        }
-
-        Bundle b = new Bundle();
-        b.putParcelable("track", trackResults.get(trackNum));
-        b.putInt("trackNum", trackNum);
-        b.putInt("numberOfSearchResults", trackResults.size());
-        playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
-        playTrackFragment.show(getFragmentManager(), "track");
-    }
 }

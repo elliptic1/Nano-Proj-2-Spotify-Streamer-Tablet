@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
@@ -22,6 +23,8 @@ import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
+
+import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 
@@ -35,8 +38,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity
-        implements Callbacks {
+public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static String TAG = "Nano";
     private static MediaPlayer mediaPlayer;
@@ -206,30 +208,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // For the fragment
-    @Override
-    public void onTrackSelected(int trackNumber) {
-        Log.d(TAG, "got play track intent: " + trackNumber);
-
-        if (trackNumber >= TrackResult.ITEMS.size()) return;
-
-        if (playTrackFragment != null) {
-            try {
-                playTrackFragment.dismiss();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
-        Bundle b = new Bundle();
-        TrackResult trackResult = new TrackResult(trackNumber, TrackResult.ITEMS.get(trackNumber).getTrack());
-        b.putParcelable("track", trackResult);
-        b.putInt("trackNum", trackNumber);
-        b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
-        playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
-        playTrackFragment.show(getFragmentManager(), "track");
-    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -246,10 +224,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Callback method from {@link ArtistSearchResultListFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
     @Override
     public void onArtistSelected(int id) {
         String artist = ArtistSearchResult.ITEMS.get(id).getArtistName();
@@ -276,5 +250,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(trackListActivityIntent);
         }
     }
+
+    @Override
+    public void onTrackSelected(int ignore) {
+        // not used
+    }
+
 
 }

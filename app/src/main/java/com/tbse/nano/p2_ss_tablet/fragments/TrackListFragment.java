@@ -2,16 +2,21 @@ package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
-import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
+import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Receiver;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,11 +42,13 @@ import retrofit.client.Response;
  * interface.
  */
 
+@EFragment
 public class TrackListFragment extends ListFragment {
 
-    public static String TAG = TrackListActivity.TAG + "-TLFrag";
+    public static String TAG = MainActivity.TAG + "-TLFrag";
 
     private TrackResultsAdapter trackResultsAdapter;
+    private PlayTrackFragment playTrackFragment;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -50,31 +57,11 @@ public class TrackListFragment extends ListFragment {
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
     /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = sDummyCallbacks;
-
-    /**
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private ArrayList<TrackResult> trackResults;
-
-    /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
-        @Override
-        public void onTrackSelected(int id) {
-        }
-
-        @Override
-        public void onArtistSelected(int id) {
-        }
-    };
+    private static ArrayList<TrackResult> trackResults;
 
 
     /**
@@ -172,8 +159,8 @@ public class TrackListFragment extends ListFragment {
 
     }
 
-    synchronized private void updateAdapter(List<TrackResult> sr) {
-        final ListIterator<TrackResult> parcelableTrackListIterator = sr.listIterator();
+    synchronized private void updateAdapter(final List<TrackResult> sr) {
+        final ListIterator<TrackResult> trackListIterator = sr.listIterator();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -181,8 +168,8 @@ public class TrackListFragment extends ListFragment {
 
                 TrackResult.ITEMS.clear();
                 trackResultsAdapter.clear();
-                while (parcelableTrackListIterator.hasNext()) {
-                    TrackResult parcelableTrack = parcelableTrackListIterator.next();
+                while (trackListIterator.hasNext()) {
+                    TrackResult parcelableTrack = trackListIterator.next();
                     Log.d(TAG, "got " + id + " " + parcelableTrack.getTrack().name);
 
                     TrackResult srItem = new TrackResult(id, parcelableTrack.getTrack());
@@ -194,6 +181,8 @@ public class TrackListFragment extends ListFragment {
                     TrackResult.ITEMS.add(trackResultItem);
 
                     ++id;
+
+                    if (id > 9) return;
                 }
 
             }
@@ -201,32 +190,48 @@ public class TrackListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("TLActivity must implement fragment's callbacks.");
-        }
-
-        mCallbacks = (Callbacks) activity;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
-    }
-
-    @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
-        mCallbacks.onTrackSelected(TrackResult.ITEMS.get(position).getId());
+        playTrack(position);
 
     }
+
+    @Receiver(actions = "TLF_playTrack", local = true)
+    void playTrack(@Receiver.Extra int trackNumber) {
+        Log.d(TAG, "playTrack: " + trackNumber);
+
+        if (trackResults == null) {
+            Log.e(TAG, "trackResults is null");
+            trackResults = TrackResult.ITEMS;
+            return;
+        }
+
+        if (trackNumber >= trackResults.size()) return;
+
+        if (playTrackFragment != null) {
+            try {
+                playTrackFragment.dismiss();
+            } catch (Exception e) {
+                Log.e(TAG, "Excp - couldn't dismiss " + e.getMessage());
+            }
+        } else {
+            Log.e(TAG, "playTrackFragment is null");
+        }
+
+        Bundle b = new Bundle();
+        TrackResult trackResult = new TrackResult(trackNumber, trackResults.get(trackNumber).getTrack());
+        b.putParcelable("track", trackResult);
+        b.putInt("trackNumber", trackNumber);
+        b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
+
+        Log.d(TAG, "Bundle is " + b.toString());
+
+        playTrackFragment = new PlayTrackFragment_();
+        playTrackFragment.setArguments(b);
+        playTrackFragment.show(getActivity().getFragmentManager(), "track");
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

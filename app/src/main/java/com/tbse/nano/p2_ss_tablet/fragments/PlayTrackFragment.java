@@ -1,9 +1,11 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
+import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
@@ -121,30 +124,9 @@ public class PlayTrackFragment extends DialogFragment {
         }
     }
 
-    @Background
-    void playTrackNum(int n) {
-        Log.d(TAG, "play track " + n);
-        if (n < 0) {
-            n = 0;
-        } else if (n > 9) {
-            n = 9;
-        }
-        Log.d(TAG, "now play track " + n);
-
-        showingTrackNum = n;
-
-        Bundle b = new Bundle();
-        b.putSerializable("track", new TrackResult(n, selectedTrack));
-        b.putInt("trackNum", n);
-        b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
-        PlayTrackFragment playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
-        playTrackFragment.show(getFragmentManager(), "track");
-    }
-
     @Click(R.id.prev_btn)
     void clickLeft() {
-        Log.d(TAG, "click left, showing " + (showingTrackNum - 1));
+        Log.d(TAG, "click left, showingTrackNum " + showingTrackNum);
         if (showingTrackNum == 0) return;
         playTrackNum(showingTrackNum - 1);
     }
@@ -153,10 +135,18 @@ public class PlayTrackFragment extends DialogFragment {
     void clickRight() {
         int numberOfSearchResults = getArguments().getInt("numberOfSearchResults") > 10 ?
                 10 : getArguments().getInt("numberOfSearchResults");
-        Log.d(TAG, "click right, showing " + (showingTrackNum + 1)
-                + " numResults-1 = " + (numberOfSearchResults - 1));
+        Log.d(TAG, "click right, showingTrackNum " + showingTrackNum
+                + " numResults = " + numberOfSearchResults);
         if (showingTrackNum == numberOfSearchResults - 1) return;
         playTrackNum(showingTrackNum + 1);
+    }
+
+    private void playTrackNum(int n) {
+        Log.d(TAG, "playTrackNum(" + n + ")");
+        Intent intent = new Intent("TLF_playTrack");
+        intent.putExtra("trackNumber", n);
+        Log.d(TAG, "sending intent " + intent.toURI());
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
     }
 
     @Override
@@ -166,6 +156,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         try {
             selectedTrack = ((TrackResult) getArguments().getSerializable("track")).getTrack();
+            Log.d(TAG, "set track result to " + selectedTrack.name);
         } catch (Exception e) {
             Log.d(TAG, "onCreate is using a new track");
             selectedTrack = new Track();
@@ -177,7 +168,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
-        Log.d(TAG, "currently the selected track is " + selectedTrack);
+        Log.d(TAG, "currently the selected track is " + selectedTrack.name);
 
         TrackResult tr = new TrackResult(showingTrackNum, selectedTrack);
 
