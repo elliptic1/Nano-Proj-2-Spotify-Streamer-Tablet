@@ -2,6 +2,7 @@ package com.tbse.nano.p2_ss_tablet.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
@@ -36,15 +37,7 @@ public class TrackResult implements Serializable, Parcelable {
         }
     };
 
-    public int getTrackIndex() {
-        return trackIndex;
-    }
-
-    public void setTrackIndex(int trackIndex) {
-        this.trackIndex = trackIndex;
-    }
-
-    private int trackIndex; // Should be ten
+    private int trackIndex;
 
     public TrackResult(int index, Track track) {
         this.track = track;
@@ -88,10 +81,10 @@ public class TrackResult implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(trackIndex);
-        dest.writeSerializable(this);
+//        dest.writeSerializable(this);
     }
 
-    public static class TrackResultItem {
+    public static class TrackResultItem implements Serializable {
         private int id;
         private Track track;
 
@@ -125,6 +118,7 @@ public class TrackResult implements Serializable, Parcelable {
             return track.album.images.size();
         }
 
+        @Nullable
         public Image getFirstTrackImage() {
             if (getNumberOfTrackImages() > 0) {
                 return track.album.images.get(0);

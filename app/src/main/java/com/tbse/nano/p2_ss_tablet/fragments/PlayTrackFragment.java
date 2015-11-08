@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +47,8 @@ public class PlayTrackFragment extends DialogFragment {
     @ViewById(R.id.next_btn)
     ImageView nextBtn;
 
+    Handler handler;
+
     private static String TAG = MainActivity.TAG + "-PTF";
 
     private static Track selectedTrack;
@@ -53,8 +56,6 @@ public class PlayTrackFragment extends DialogFragment {
     private enum PlayerState {PLAYING, PAUSED}
 
     private PlayerState mPlayerState = PlayerState.PAUSED;
-    private static int showingTrackNum = 0;
-    private int numberOfSearchResults = 0;
 
     public PlayTrackFragment() {
         Log.d(TAG, "constr");
@@ -126,27 +127,14 @@ public class PlayTrackFragment extends DialogFragment {
 
     @Click(R.id.prev_btn)
     void clickLeft() {
-        Log.d(TAG, "click left, showingTrackNum " + showingTrackNum);
-        if (showingTrackNum == 0) return;
-        playTrackNum(showingTrackNum - 1);
+        Log.d(TAG, "click left");
+        getHandler().obtainMessage(-1).sendToTarget();
     }
 
     @Click(R.id.next_btn)
     void clickRight() {
-        int numberOfSearchResults = getArguments().getInt("numberOfSearchResults") > 10 ?
-                10 : getArguments().getInt("numberOfSearchResults");
-        Log.d(TAG, "click right, showingTrackNum " + showingTrackNum
-                + " numResults = " + numberOfSearchResults);
-        if (showingTrackNum == numberOfSearchResults - 1) return;
-        playTrackNum(showingTrackNum + 1);
-    }
-
-    private void playTrackNum(int n) {
-        Log.d(TAG, "playTrackNum(" + n + ")");
-        Intent intent = new Intent("TLF_playTrack");
-        intent.putExtra("trackNumber", n);
-        Log.d(TAG, "sending intent " + intent.toURI());
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+        Log.d(TAG, "click right");
+        getHandler().obtainMessage(1).sendToTarget();
     }
 
     @Override
@@ -170,20 +158,18 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "currently the selected track is " + selectedTrack.name);
 
-        TrackResult tr = new TrackResult(showingTrackNum, selectedTrack);
-
-        Log.d(TAG, "artist: " + tr.getTrack().artists.get(0).name);
-        artistName.setText(tr.getTrack().artists.get(0).name);
-        int duration = Integer.valueOf("" + (tr.getTrack().duration_ms / 1000));
+        Log.d(TAG, "artist: " + selectedTrack.artists.get(0).name);
+        artistName.setText(selectedTrack.artists.get(0).name);
+        int duration = Integer.valueOf("" + (selectedTrack.duration_ms / 1000));
         int minutes = duration / 60;
         int leftover = duration % 60;
-        trackTitle.setText(tr.getTrack().name
+        trackTitle.setText(selectedTrack.name
                 + " (" + minutes + "m " + leftover + "s)");
-        albumTitle.setText(tr.getAlbum().name);
+        albumTitle.setText(selectedTrack.name);
 
-        if (tr.getNumberOfImages() > 0) {
+        if (getNumberOfImages(selectedTrack) > 0) {
             albumImage.setVisibility(View.VISIBLE);
-            Image image = tr.getImage();
+            Image image = selectedTrack.album.images.get(0);
             if (image != null) {
                 Picasso.with(getActivity())
                         .load(image.url)
@@ -198,6 +184,18 @@ public class PlayTrackFragment extends DialogFragment {
 
     }
 
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    public int getNumberOfImages(Track track) {
+        if (track == null || track.album == null || track.album.images == null) return 0;
+        return track.album.images.size();
+    }
 
     @Override
     public void onResume() {

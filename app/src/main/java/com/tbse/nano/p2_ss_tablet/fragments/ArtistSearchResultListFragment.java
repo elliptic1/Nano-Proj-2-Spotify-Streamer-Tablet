@@ -13,22 +13,14 @@ import com.tbse.nano.p2_ss_tablet.adapters.ArtistSearchResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 
+import org.androidannotations.annotations.UiThread;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
 import kaaes.spotify.webapi.android.models.Artist;
-
-/**
- * A list fragment representing a list of SearchResults. This fragment
- * also supports tablet devices by allowing list items to be given an
- * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link AlbumSearchResultListFragment}.
- * <p/>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
- */
 
 public class ArtistSearchResultListFragment extends ListFragment {
 
@@ -147,7 +139,7 @@ public class ArtistSearchResultListFragment extends ListFragment {
                         Log.e(TAG, "parcelableArtist.getArtist " + id + " was null");
                         continue;
                     }
-                    Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
+//                    Log.d(TAG, "got " + id + " " + parcelableArtist.getArtist().name);
 
                     Artist srArtist = parcelableArtist.getArtist();
 
@@ -156,7 +148,7 @@ public class ArtistSearchResultListFragment extends ListFragment {
 
                     ArtistSearchResult.addItem(srItem);
 
-                    Log.d(TAG, "Now ITEMS is " + ArtistSearchResult.ITEMS);
+//                    Log.d(TAG, "Now ITEMS is " + ArtistSearchResult.ITEMS);
 
                     artistSearchResultsAdapter.add(srItem);
 

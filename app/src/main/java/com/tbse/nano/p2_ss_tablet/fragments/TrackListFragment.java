@@ -1,8 +1,10 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +16,7 @@ import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Receiver;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +49,8 @@ public class TrackListFragment extends ListFragment {
 
     private TrackResultsAdapter trackResultsAdapter;
     private PlayTrackFragment playTrackFragment;
+    private int currentlyPlayingTrackNumber;
+    private static Handler changeTrackHandler;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -61,7 +63,11 @@ public class TrackListFragment extends ListFragment {
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private static ArrayList<TrackResult> trackResults;
+    public ArrayList<TrackResult> getTrackResults() {
+        return trackResults;
+    }
+
+    private ArrayList<TrackResult> trackResults;
 
 
     /**
@@ -75,48 +81,69 @@ public class TrackListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        changeTrackHandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+
+                Log.d(TAG, "handling message " + msg.toString() + " with data " + msg.getData());
+
+                switch (msg.what) {
+                    case -1: // prev
+                        if (currentlyPlayingTrackNumber != 0) playTrack(currentlyPlayingTrackNumber-1);
+                        break;
+                    case 1: // next
+                        if (currentlyPlayingTrackNumber != 9) playTrack(currentlyPlayingTrackNumber+1);
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        if (playTrackFragment != null)
+            playTrackFragment.setHandler(changeTrackHandler);
         trackResultsAdapter = new TrackResultsAdapter(getContext());
         setListAdapter(trackResultsAdapter);
 
-        Bundle args = getArguments();
-        String artistName;
-        if (args == null) {
-            Log.e(TAG, "started TrackListFragment with null args");
-            return;
-        } else {
-            artistName = args.getString("artist");
-        }
+    }
 
+    public void search(String artistName) {
+        Log.d(TAG, "setting trackResults to new List");
         trackResults = new ArrayList<TrackResult>();
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
-        spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
-            @Override
-            public void success(TracksPager tracksPager, Response response) {
-                Pager<Track> pager = tracksPager.tracks;
-                if (pager.items.size() == 0) {
-                    Log.d(TAG, "TODO: clearing list from searchSpotify");
+        Log.d(TAG, "Searching with artistname [" + artistName + "]");
+        if (!artistName.equals(""))
+            spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
+                @Override
+                public void success(TracksPager tracksPager, Response response) {
+                    Log.d(TAG, "search success");
+                    Pager<Track> pager = tracksPager.tracks;
+                    if (pager.items.size() == 0) {
+                        Log.d(TAG, "TODO: clearing list from searchSpotify");
 //                          TODO: clearTrackResultsList();
-                    return;
+                        return;
+                    }
+
+                    int c = 0;
+                    Log.d(TAG, "clearing track results");
+                    trackResults.clear();
+                    for (Track t : pager.items) {
+                        Log.d(TAG, "adding track " + t.name);
+                        trackResults.add(new TrackResult(c, t));
+                        c++;
+                    }
+
+                    populateSearchResultsList(trackResults);
+
                 }
 
-                int c = 0;
-                trackResults.clear();
-                for (Track t : pager.items) {
-                    trackResults.add(new TrackResult(c, t));
-                    c++;
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "failure: " + error.getBody());
                 }
-
-                populateSearchResultsList(trackResults);
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "failure: " + error.getBody());
-            }
-        });
+            });
 
     }
 
@@ -130,6 +157,15 @@ public class TrackListFragment extends ListFragment {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
     }
+
+    public void populateSearchResultsListFromParcelables(@NonNull final List<Parcelable> sr) {
+        trackResults = new ArrayList<TrackResult>();
+        for (Parcelable p : sr) {
+            trackResults.add((TrackResult) p);
+        }
+        populateSearchResultsList(trackResults);
+    }
+
 
     public void populateSearchResultsList(final List<TrackResult> sr) {
         new Thread(new Runnable() {
@@ -151,6 +187,7 @@ public class TrackListFragment extends ListFragment {
                     }
                 });
 
+                Log.d(TAG, "updating adapter");
                 updateAdapter(sr);
 
             }
@@ -197,20 +234,16 @@ public class TrackListFragment extends ListFragment {
 
     }
 
-    @Receiver(actions = "TLF_playTrack", local = true)
-    void playTrack(@Receiver.Extra int trackNumber) {
-        Log.d(TAG, "playTrack: " + trackNumber);
+    private void playTrack(int trackNumber) {
+        Log.d(TAG, "playTrack: " + trackNumber + " out of " + trackResults.size());
 
-        if (trackResults == null) {
-            Log.e(TAG, "trackResults is null");
-            trackResults = TrackResult.ITEMS;
-            return;
-        }
+        currentlyPlayingTrackNumber = trackNumber;
 
         if (trackNumber >= trackResults.size()) return;
 
         if (playTrackFragment != null) {
             try {
+                Log.d(TAG, "dismissing");
                 playTrackFragment.dismiss();
             } catch (Exception e) {
                 Log.e(TAG, "Excp - couldn't dismiss " + e.getMessage());
@@ -229,6 +262,7 @@ public class TrackListFragment extends ListFragment {
 
         playTrackFragment = new PlayTrackFragment_();
         playTrackFragment.setArguments(b);
+        playTrackFragment.setHandler(changeTrackHandler);
         playTrackFragment.show(getActivity().getFragmentManager(), "track");
     }
 
