@@ -6,6 +6,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
@@ -31,6 +34,15 @@ import kaaes.spotify.webapi.android.models.Track;
 
 @EFragment(R.layout.play_track)
 public class PlayTrackFragment extends DialogFragment {
+
+    @FragmentArg
+    Parcelable trackResult;
+    @FragmentArg
+    String artist;
+    @FragmentArg
+    int trackNumber;
+    @FragmentArg
+    int numberOfSearchResults;
 
     @ViewById(R.id.play_album_image)
     ImageView albumImage;
@@ -47,7 +59,7 @@ public class PlayTrackFragment extends DialogFragment {
     @ViewById(R.id.next_btn)
     ImageView nextBtn;
 
-    Handler handler;
+    private static Handler handler;
 
     private static String TAG = MainActivity.TAG + "-PTF";
 
@@ -143,11 +155,21 @@ public class PlayTrackFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, getTheme());
 
         try {
-            selectedTrack = ((TrackResult) getArguments().getSerializable("track")).getTrack();
+            selectedTrack = ((TrackResult)trackResult).getTrack();
             Log.d(TAG, "set track result to " + selectedTrack.name);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "onCreate npe");
         } catch (Exception e) {
             Log.d(TAG, "onCreate is using a new track");
-            selectedTrack = new Track();
+        } finally {
+            if (selectedTrack == null)
+                selectedTrack = new Track();
+        }
+
+        if (getHandler() == null) {
+            Log.e(TAG, "PTF onCreate getHandler is null");
+        } else {
+            Log.d(TAG, "PTF onCreate getHandler is NOT null");
         }
     }
 
@@ -156,6 +178,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
+        selectedTrack = ((TrackResult) trackResult).getTrack();
         Log.d(TAG, "currently the selected track is " + selectedTrack.name);
 
         Log.d(TAG, "artist: " + selectedTrack.artists.get(0).name);
@@ -184,16 +207,18 @@ public class PlayTrackFragment extends DialogFragment {
 
     }
 
-    public Handler getHandler() {
+    @NonNull
+    public static Handler getHandler() {
+        Log.d(TAG, "getting handler " + handler);
         return handler;
     }
 
-    public void setHandler(Handler handler) {
+    public void setHandler(@NonNull Handler handler) {
         this.handler = handler;
     }
 
-    public int getNumberOfImages(Track track) {
-        if (track == null || track.album == null || track.album.images == null) return 0;
+    public int getNumberOfImages(@NonNull Track track) {
+        if (track.album == null || track.album.images == null) return 0;
         return track.album.images.size();
     }
 
@@ -214,5 +239,6 @@ public class PlayTrackFragment extends DialogFragment {
             mPlayerState = PlayerState.PAUSED;
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
         }
+
     }
 }

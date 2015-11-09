@@ -1,36 +1,20 @@
 package com.tbse.nano.p2_ss_tablet.activities;
 
-import android.os.Parcelable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
-import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
-import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * An activity representing a single TrackList detail screen. This

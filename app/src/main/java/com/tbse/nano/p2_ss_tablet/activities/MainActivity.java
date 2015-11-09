@@ -15,16 +15,10 @@ import android.widget.Toast;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
-import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
-import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment;
-import com.tbse.nano.p2_ss_tablet.fragments.PlayTrackFragment_;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
-import com.tbse.nano.p2_ss_tablet.models.TrackResult;
-
-import org.androidannotations.annotations.Receiver;
 
 import java.util.ArrayList;
 
@@ -42,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static String TAG = "Nano";
     private static MediaPlayer mediaPlayer;
-    private PlayTrackFragment playTrackFragment;
     SearchView searchView;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -117,15 +110,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         artistSearchResultListFragment = (ArtistSearchResultListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.artist_search_result_list);
 
@@ -192,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     protected void onResume() {
         super.onResume();
         if (hasBeenRestored) {
+            Log.d(TAG, "has been restored and populating search results list");
             artistSearchResultListFragment.populateSearchResultsList(parcelableArtists);
             getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -237,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             arguments.putString("artist", artist);
             TrackListFragment fragment = new TrackListFragment();
             fragment.setArguments(arguments);
+            fragment.setActivity(this);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.tracklist_container, fragment)
                     .commit();

@@ -1,5 +1,6 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,8 +15,6 @@ import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
-
-import org.androidannotations.annotations.EFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,11 +41,11 @@ import retrofit.client.Response;
  * interface.
  */
 
-@EFragment
 public class TrackListFragment extends ListFragment {
 
     public static String TAG = MainActivity.TAG + "-TLFrag";
 
+    private Activity activity;
     private TrackResultsAdapter trackResultsAdapter;
     private PlayTrackFragment playTrackFragment;
     private int currentlyPlayingTrackNumber;
@@ -69,30 +68,47 @@ public class TrackListFragment extends ListFragment {
 
     private ArrayList<TrackResult> trackResults;
 
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public TrackListFragment() {
+        Log.d(TAG, "Instantiated with bundle " + getArguments());
+
+        search("prince");
+
+//        if (getArguments() != null) {
+//            String artist = getArguments().getString("artist");
+//            if (artist != null && !artist.equals("")) {
+//                search(artist);
+//            }
+//        } else {
+//            Log.e(TAG, "getArguments is null");
+//        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate with " + savedInstanceState);
+
         changeTrackHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
 
-                Log.d(TAG, "handling message " + msg.toString() + " with data " + msg.getData());
+                Log.d(TAG, "handling message " + msg + " with data " + msg.getData());
 
                 switch (msg.what) {
                     case -1: // prev
-                        if (currentlyPlayingTrackNumber != 0) playTrack(currentlyPlayingTrackNumber-1);
+                        if (currentlyPlayingTrackNumber != 0) playTrack(getActivity(), currentlyPlayingTrackNumber-1);
                         break;
                     case 1: // next
-                        if (currentlyPlayingTrackNumber != 9) playTrack(currentlyPlayingTrackNumber+1);
+                        if (currentlyPlayingTrackNumber != 9) playTrack(getActivity(), currentlyPlayingTrackNumber+1);
                         break;
                 }
 
@@ -100,21 +116,19 @@ public class TrackListFragment extends ListFragment {
             }
         });
 
-        if (playTrackFragment != null)
-            playTrackFragment.setHandler(changeTrackHandler);
-        trackResultsAdapter = new TrackResultsAdapter(getContext());
+       trackResultsAdapter = new TrackResultsAdapter(getContext());
         setListAdapter(trackResultsAdapter);
 
     }
 
-    public void search(String artistName) {
+    public void search(@NonNull String artistName) {
         Log.d(TAG, "setting trackResults to new List");
         trackResults = new ArrayList<TrackResult>();
 
         SpotifyApi api = new SpotifyApi();
         final SpotifyService spotify = api.getService();
         Log.d(TAG, "Searching with artistname [" + artistName + "]");
-        if (!artistName.equals(""))
+        if (!"".equals(artistName))
             spotify.searchTracks("artist:" + artistName, new Callback<TracksPager>() {
                 @Override
                 public void success(TracksPager tracksPager, Response response) {
@@ -167,17 +181,12 @@ public class TrackListFragment extends ListFragment {
     }
 
 
-    public void populateSearchResultsList(final List<TrackResult> sr) {
+    public void populateSearchResultsList(@NonNull final List<TrackResult> sr) {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 Log.d(TAG, "populating track list");
-
-                if (sr == null) {
-                    Log.e(TAG, "called populate with null list");
-                    return;
-                }
 
                 // sort by popularity
                 Collections.sort(sr, new Comparator<TrackResult>() {
@@ -198,7 +207,14 @@ public class TrackListFragment extends ListFragment {
 
     synchronized private void updateAdapter(final List<TrackResult> sr) {
         final ListIterator<TrackResult> trackListIterator = sr.listIterator();
-        getActivity().runOnUiThread(new Runnable() {
+        Activity activity = getActivity();
+
+        // tablet
+        if (activity == null) {
+            activity = getParentFragment().getActivity();
+        }
+
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 int id = 0;
@@ -230,11 +246,11 @@ public class TrackListFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
-        playTrack(position);
+        playTrack(getActivity(), position);
 
     }
 
-    private void playTrack(int trackNumber) {
+    private void playTrack(Activity activity, final int trackNumber) {
         Log.d(TAG, "playTrack: " + trackNumber + " out of " + trackResults.size());
 
         currentlyPlayingTrackNumber = trackNumber;
@@ -254,16 +270,17 @@ public class TrackListFragment extends ListFragment {
 
         Bundle b = new Bundle();
         TrackResult trackResult = new TrackResult(trackNumber, trackResults.get(trackNumber).getTrack());
-        b.putParcelable("track", trackResult);
+        b.putParcelable("trackResult", trackResult);
+        b.putString("artist", trackResult.getTrack().artists.get(0).name);
         b.putInt("trackNumber", trackNumber);
         b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
 
-        Log.d(TAG, "Bundle is " + b.toString());
-
-        playTrackFragment = new PlayTrackFragment_();
-        playTrackFragment.setArguments(b);
+        Log.d(TAG, "Bundle is " + b);
+        playTrackFragment = PlayTrackFragment_.builder().arg(b).build();
+        Log.d(TAG, "calling pTF.setHandler");
         playTrackFragment.setHandler(changeTrackHandler);
-        playTrackFragment.show(getActivity().getFragmentManager(), "track");
+        Log.d(TAG, "pTF.show");
+        playTrackFragment.show(activity.getFragmentManager(), "track");
     }
 
 
