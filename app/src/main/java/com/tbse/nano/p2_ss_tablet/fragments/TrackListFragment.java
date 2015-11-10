@@ -77,10 +77,10 @@ public class TrackListFragment extends ListFragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public TrackListFragment() {
-        Log.d(TAG, "Instantiated with bundle " + getArguments());
-
-        search("prince");
-
+//        Log.d(TAG, "Instantiated with bundle " + getArguments());
+//
+//        search("prince");
+//
 //        if (getArguments() != null) {
 //            String artist = getArguments().getString("artist");
 //            if (artist != null && !artist.equals("")) {

@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Log.d(TAG, "tablet screen");
             Bundle arguments = new Bundle();
             arguments.putString("artist", artist);
+            Log.d(TAG, "tablet screen making new TLF");
             TrackListFragment fragment = new TrackListFragment();
             fragment.setArguments(arguments);
             fragment.setActivity(this);
