@@ -26,7 +26,6 @@ import java.util.List;
  * more than a {@link TrackListFragment}.
  */
 
-@EActivity
 public class TrackListActivity extends AppCompatActivity {
 
     private TrackListFragment trackListFragment;

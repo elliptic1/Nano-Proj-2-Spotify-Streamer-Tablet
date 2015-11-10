@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Log.d(TAG, "phone screen with " + artist);
-            Intent trackListActivityIntent = new Intent(this, TrackListActivity_.class);
+            Intent trackListActivityIntent = new Intent(this, TrackListActivity.class);
             trackListActivityIntent.putExtra("artist", artist);
             startActivity(trackListActivityIntent);
         }

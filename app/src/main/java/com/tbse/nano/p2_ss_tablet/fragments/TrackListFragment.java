@@ -206,7 +206,6 @@ public class TrackListFragment extends ListFragment {
     }
 
     synchronized private void updateAdapter(final List<TrackResult> sr) {
-        final ListIterator<TrackResult> trackListIterator = sr.listIterator();
         Activity activity = getActivity();
 
         // tablet
@@ -221,8 +220,7 @@ public class TrackListFragment extends ListFragment {
 
                 TrackResult.ITEMS.clear();
                 trackResultsAdapter.clear();
-                while (trackListIterator.hasNext()) {
-                    TrackResult parcelableTrack = trackListIterator.next();
+                for (TrackResult parcelableTrack : sr) {
                     Log.d(TAG, "got " + id + " " + parcelableTrack.getTrack().name);
 
                     TrackResult srItem = new TrackResult(id, parcelableTrack.getTrack());
