@@ -16,6 +16,7 @@ import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
 import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -268,7 +269,7 @@ public class TrackListFragment extends ListFragment {
         b.putInt("numberOfSearchResults", TrackResult.ITEMS.size());
 
         Log.d(TAG, "Bundle is " + b);
-        playTrackFragment = PlayTrackFragment_.builder().arg(b).build();
+        playTrackFragment = PlayTrackFragment_.builder().arg("track", (Serializable) trackResult).build();
         Log.d(TAG, "calling pTF.setHandler");
         playTrackFragment.setHandler(changeTrackHandler);
         Log.d(TAG, "pTF.show");

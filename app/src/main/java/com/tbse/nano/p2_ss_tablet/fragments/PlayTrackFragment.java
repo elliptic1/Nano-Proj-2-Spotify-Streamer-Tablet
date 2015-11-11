@@ -178,6 +178,7 @@ public class PlayTrackFragment extends DialogFragment {
 
         Log.d(TAG, "AfterViews");
 
+        trackResult = getArguments().getParcelable("track");
         selectedTrack = ((TrackResult) trackResult).getTrack();
         Log.d(TAG, "currently the selected track is " + selectedTrack.name);
 

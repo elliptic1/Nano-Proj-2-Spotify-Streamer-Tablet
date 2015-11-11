@@ -12,10 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c264740c-6c40-44d2-a54d-76293c1c0679" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_searchresult_app_bar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_searchresult_app_bar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_searchresult_app_bar.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Nano-Proj-2-Spotify-Streamer-Tablet.iws" />
@@ -49,10 +47,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3030303">
+            <state vertical-scroll-proportion="0.0">
               <caret line="60" column="12" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -67,11 +65,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PlayTrackFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PlayTrackFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="4" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.33150685">
+              <caret line="180" column="22" selection-start-line="180" selection-start-column="22" selection-end-line="180" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayTrackFragment_.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment_.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-13.0">
+              <caret line="170" column="52" selection-start-line="170" selection-start-column="52" selection-end-line="170" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -81,21 +89,21 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="78" column="48" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
+              <caret line="271" column="84" selection-start-line="271" selection-start-column="84" selection-end-line="271" selection-end-column="84" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2350#2351#0" expanded="true" />
-                <element signature="e#2390#2391#0" expanded="true" />
-                <element signature="e#2424#2425#0" expanded="true" />
-                <element signature="e#2464#2465#0" expanded="true" />
-                <element signature="e#2923#3656#0" expanded="true" />
-                <element signature="e#3655#3656#0" expanded="true" />
-                <element signature="e#6159#6734#0" expanded="true" />
-                <element signature="e#6360#6622#0" expanded="true" />
-                <element signature="e#6621#6622#0" expanded="true" />
-                <element signature="e#6733#6734#0" expanded="true" />
-                <element signature="e#7021#7826#0" expanded="true" />
-                <element signature="e#7825#7826#0" expanded="true" />
+                <element signature="e#2379#2380#0" expanded="true" />
+                <element signature="e#2419#2420#0" expanded="true" />
+                <element signature="e#2453#2454#0" expanded="true" />
+                <element signature="e#2493#2494#0" expanded="true" />
+                <element signature="e#2952#3685#0" expanded="true" />
+                <element signature="e#3684#3685#0" expanded="true" />
+                <element signature="e#6188#6763#0" expanded="true" />
+                <element signature="e#6389#6651#0" expanded="true" />
+                <element signature="e#6650#6651#0" expanded="true" />
+                <element signature="e#6762#6763#0" expanded="true" />
+                <element signature="e#7050#7855#0" expanded="true" />
+                <element signature="e#7854#7855#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1629,14 +1637,14 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/models/TrackResult.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/ArtistSearchResultListFragment.java" />
         <option value="$PROJECT_DIR$/app/build/generated/source/apt/debug/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment_.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/TrackListActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_searchresult_list.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_searchresult_app_bar.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_searchresult_app_bar.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java" />
       </list>
     </option>
   </component>
@@ -2284,7 +2292,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.510467" sideWeight="0.50280225" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293556" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.4775641" sideWeight="0.49719775" order="7" side_tool="false" content_ui="tabs" x="99" y="693" width="1393" height="409" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.4775641" sideWeight="0.49719775" order="7" side_tool="false" content_ui="tabs" x="86" y="721" width="1393" height="409" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32906324" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32692307" sideWeight="0.49479583" order="2" side_tool="false" content_ui="tabs" />
@@ -2294,7 +2302,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.2991249" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="1354" y="85" width="543" height="926" />
       <window_info id="AdbCommander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36698717" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36698717" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24980111" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" x="1450" y="69" width="460" height="880" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2461,6 +2469,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="852" column="33" selection-start-line="852" selection-start-column="33" selection-end-line="852" selection-end-column="33" />
+          <folding>
+            <element signature="e#32421#32422#0" expanded="false" />
+            <element signature="e#32460#32461#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2620,14 +2632,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment_.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="171" column="12" selection-start-line="171" selection-start-column="12" selection-end-line="171" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.androidannotations/androidannotations-api/3.2/4ba5e29842e59735a76c9ab3d8a24ac7eca19f14/androidannotations-api-3.2-sources.jar!/org/androidannotations/api/builder/FragmentBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6164383">
@@ -2687,36 +2691,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="4" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="48" selection-start-line="78" selection-start-column="48" selection-end-line="78" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2350#2351#0" expanded="true" />
-            <element signature="e#2390#2391#0" expanded="true" />
-            <element signature="e#2424#2425#0" expanded="true" />
-            <element signature="e#2464#2465#0" expanded="true" />
-            <element signature="e#2923#3656#0" expanded="true" />
-            <element signature="e#3655#3656#0" expanded="true" />
-            <element signature="e#6159#6734#0" expanded="true" />
-            <element signature="e#6360#6622#0" expanded="true" />
-            <element signature="e#6621#6622#0" expanded="true" />
-            <element signature="e#6733#6734#0" expanded="true" />
-            <element signature="e#7021#7826#0" expanded="true" />
-            <element signature="e#7825#7826#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-sw600dp/activity_searchresult_list.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.67742">
@@ -2771,7 +2745,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3030303">
+        <state vertical-scroll-proportion="0.0">
           <caret line="60" column="12" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2782,6 +2756,44 @@
             <element signature="e#6901#7095#0" expanded="true" />
             <element signature="e#7094#7095#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment_.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.0">
+          <caret line="170" column="52" selection-start-line="170" selection-start-column="52" selection-end-line="170" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/TrackListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="271" column="84" selection-start-line="271" selection-start-column="84" selection-end-line="271" selection-end-column="84" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2379#2380#0" expanded="true" />
+            <element signature="e#2419#2420#0" expanded="true" />
+            <element signature="e#2453#2454#0" expanded="true" />
+            <element signature="e#2493#2494#0" expanded="true" />
+            <element signature="e#2952#3685#0" expanded="true" />
+            <element signature="e#3684#3685#0" expanded="true" />
+            <element signature="e#6188#6763#0" expanded="true" />
+            <element signature="e#6389#6651#0" expanded="true" />
+            <element signature="e#6650#6651#0" expanded="true" />
+            <element signature="e#6762#6763#0" expanded="true" />
+            <element signature="e#7050#7855#0" expanded="true" />
+            <element signature="e#7854#7855#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/tbse/nano/p2_ss_tablet/fragments/PlayTrackFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33150685">
+          <caret line="180" column="22" selection-start-line="180" selection-start-column="22" selection-end-line="180" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
