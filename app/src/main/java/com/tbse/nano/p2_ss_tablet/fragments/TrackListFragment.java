@@ -72,23 +72,15 @@ public class TrackListFragment extends ListFragment {
         this.activity = activity;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public TrackListFragment() {
-//        Log.d(TAG, "Instantiated with bundle " + getArguments());
-//
-//        search("prince");
-//
-//        if (getArguments() != null) {
-//            String artist = getArguments().getString("artist");
-//            if (artist != null && !artist.equals("")) {
-//                search(artist);
-//            }
-//        } else {
-//            Log.e(TAG, "getArguments is null");
-//        }
+        Log.d(TAG, "TLF constr");
+    }
+
+    public static TrackListFragment newInstance(Activity activity) {
+        Log.d(TAG, "TLF newInstance");
+        TrackListFragment fragment = new TrackListFragment();
+        fragment.setActivity(activity);
+        return fragment;
     }
 
     @Override
@@ -105,10 +97,12 @@ public class TrackListFragment extends ListFragment {
 
                 switch (msg.what) {
                     case -1: // prev
-                        if (currentlyPlayingTrackNumber != 0) playTrack(getActivity(), currentlyPlayingTrackNumber-1);
+                        if (currentlyPlayingTrackNumber != 0)
+                            playTrack(getActivity(), currentlyPlayingTrackNumber - 1);
                         break;
                     case 1: // next
-                        if (currentlyPlayingTrackNumber != 9) playTrack(getActivity(), currentlyPlayingTrackNumber+1);
+                        if (currentlyPlayingTrackNumber != 9)
+                            playTrack(getActivity(), currentlyPlayingTrackNumber + 1);
                         break;
                 }
 
@@ -116,7 +110,7 @@ public class TrackListFragment extends ListFragment {
             }
         });
 
-       trackResultsAdapter = new TrackResultsAdapter(getContext());
+        trackResultsAdapter = new TrackResultsAdapter(getContext());
         setListAdapter(trackResultsAdapter);
 
     }

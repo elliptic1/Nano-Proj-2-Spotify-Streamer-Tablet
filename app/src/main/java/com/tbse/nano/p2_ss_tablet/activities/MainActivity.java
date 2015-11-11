@@ -2,6 +2,7 @@ package com.tbse.nano.p2_ss_tablet.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,12 @@ import android.widget.Toast;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.R;
+import com.tbse.nano.p2_ss_tablet.adapters.TrackResultsAdapter;
 import com.tbse.nano.p2_ss_tablet.fragments.ArtistSearchResultListFragment;
 import com.tbse.nano.p2_ss_tablet.fragments.TrackListFragment;
 import com.tbse.nano.p2_ss_tablet.models.ArtistSearchResult;
 import com.tbse.nano.p2_ss_tablet.models.ParcelableArtist;
+import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import java.util.ArrayList;
 
@@ -46,11 +49,20 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     private ArrayList<ParcelableArtist> parcelableArtists;
     private String searchText = "";
     private ArtistSearchResultListFragment artistSearchResultListFragment;
+    private TrackListFragment trackListFragment;
     SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
 
             Log.d(TAG, "Enter was pressed!");
+
+                trackListFragment = (TrackListFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.trackresult_list);
+            if (trackListFragment != null) {
+                TrackResult.ITEMS.clear();
+                ((TrackResultsAdapter) trackListFragment.getListAdapter()).notifyDataSetChanged();
+
+            }
 
             searchText = query;
 
@@ -82,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                     showBadNetworkToast();
                 }
             });
+
+            if (trackListFragment != null) {
+                TrackResult.ITEMS.clear();
+                ((TrackResultsAdapter) trackListFragment.getListAdapter()).notifyDataSetChanged();
+            }
+
 
             return true;
         }
@@ -119,6 +137,11 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             // res/values-sw600dp). If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+
+            trackListFragment = (TrackListFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.tracklist_container);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
@@ -217,12 +240,12 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString("artist", artist);
+//            Bundle arguments = new Bundle();
+//            arguments.putString("artist", artist);
+
             Log.d(TAG, "tablet screen making new TLF");
-            TrackListFragment fragment = new TrackListFragment();
-            fragment.setArguments(arguments);
-            fragment.setActivity(this);
+            TrackListFragment fragment = TrackListFragment.newInstance(this);
+            fragment.search(artist);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.tracklist_container, fragment)
                     .commit();
