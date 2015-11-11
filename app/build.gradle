@@ -30,7 +30,7 @@ android {
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-    def vc = 7
+    def vc = 8
     defaultConfig {
         applicationId "com.tbse.nano.p2_ss_tablet"
         minSdkVersion 15
