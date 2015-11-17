@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tbse.nano.p2_ss_tablet.Callbacks;
 import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ListIterator;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -206,6 +206,16 @@ public class TrackListFragment extends ListFragment {
         // tablet
         if (activity == null) {
             activity = getParentFragment().getActivity();
+        }
+
+        if (sr.size() == 0) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "No tracks!", Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
         }
 
         activity.runOnUiThread(new Runnable() {
