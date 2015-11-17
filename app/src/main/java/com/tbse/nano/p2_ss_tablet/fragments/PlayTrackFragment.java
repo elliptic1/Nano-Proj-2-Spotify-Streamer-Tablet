@@ -111,16 +111,20 @@ public class PlayTrackFragment extends DialogFragment {
 
     void startAudio(String track_prev_url) {
         MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            MainActivity.setMediaPlayer(mediaPlayer);
+
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            mediaPlayer.release();
         }
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        MainActivity.setMediaPlayer(mediaPlayer);
+
 
         try {
-            if (mediaPlayer.isPlaying()) {
-                return;
-            }
+//            if (mediaPlayer.isPlaying()) {
+//                return;
+//            }
             mediaPlayer.setDataSource(track_prev_url);
             mediaPlayer.prepare(); // might take long! (for buffering, etc)
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -155,7 +159,7 @@ public class PlayTrackFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, getTheme());
 
         try {
-            selectedTrack = ((TrackResult)trackResult).getTrack();
+            selectedTrack = ((TrackResult) trackResult).getTrack();
             Log.d(TAG, "set track result to " + selectedTrack.name);
         } catch (NullPointerException e) {
             Log.d(TAG, "onCreate npe");
@@ -227,27 +231,27 @@ public class PlayTrackFragment extends DialogFragment {
     public void onResume() {
         super.onResume();
         MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
-        if (mediaPlayer == null) {
-            mPlayerState = PlayerState.PLAYING;
-            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
+//        if (mediaPlayer == null) {
+        mPlayerState = PlayerState.PLAYING;
+        playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
-            if (tr == null) {
-                Log.e(TAG, "tr was null");
-                return;
-            }
-            startAudio(tr.getTrack().preview_url);
-
+        TrackResult tr = (TrackResult) getArguments().getSerializable("track");
+        if (tr == null) {
+            Log.e(TAG, "tr was null");
             return;
         }
+        startAudio(tr.getTrack().preview_url);
 
-        if (mediaPlayer.isPlaying()) {
-            mPlayerState = PlayerState.PLAYING;
-            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
-        } else {
-            mPlayerState = PlayerState.PAUSED;
-            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
-        }
+//            return;
+//        }
+
+//        if (mediaPlayer.isPlaying()) {
+//            mPlayerState = PlayerState.PLAYING;
+//            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
+//        } else {
+//            mPlayerState = PlayerState.PAUSED;
+//            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
+//        }
 
     }
 }
