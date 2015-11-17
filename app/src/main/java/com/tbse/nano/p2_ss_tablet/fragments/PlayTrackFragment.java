@@ -1,14 +1,12 @@
 package com.tbse.nano.p2_ss_tablet.fragments;
 
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,11 +15,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tbse.nano.p2_ss_tablet.R;
 import com.tbse.nano.p2_ss_tablet.activities.MainActivity;
-import com.tbse.nano.p2_ss_tablet.activities.TrackListActivity;
 import com.tbse.nano.p2_ss_tablet.models.TrackResult;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -81,7 +77,6 @@ public class PlayTrackFragment extends DialogFragment {
 
         if (mediaPlayer != null) {
             mediaPlayer.release();
-            mediaPlayer = null;
         }
 
         mediaPlayer = new MediaPlayer();
@@ -114,9 +109,14 @@ public class PlayTrackFragment extends DialogFragment {
 
     }
 
-    @Background
     void startAudio(String track_prev_url) {
         MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
+        if (mediaPlayer == null) {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            MainActivity.setMediaPlayer(mediaPlayer);
+        }
+
         try {
             if (mediaPlayer.isPlaying()) {
                 return;
@@ -228,8 +228,16 @@ public class PlayTrackFragment extends DialogFragment {
         super.onResume();
         MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
         if (mediaPlayer == null) {
-            mPlayerState = PlayerState.PAUSED;
-            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
+            mPlayerState = PlayerState.PLAYING;
+            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
+
+            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
+            if (tr == null) {
+                Log.e(TAG, "tr was null");
+                return;
+            }
+            startAudio(tr.getTrack().preview_url);
+
             return;
         }
 
