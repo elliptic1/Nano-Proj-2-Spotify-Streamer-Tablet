@@ -48,6 +48,9 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
     @FragmentArg
     int numberOfSearchResults;
 
+    private int totmin;
+    private int totsec;
+
     @ViewById(R.id.seekBar)
     SeekBar seekBar;
     @ViewById(R.id.play_album_image)
@@ -62,6 +65,8 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
     ImageView playPauseBtn;
     @ViewById(R.id.next_btn)
     ImageView nextBtn;
+    @ViewById(R.id.currentProgress)
+    TextView currentProgressTV;
 
     private static Handler handler;
     private static Handler seekBarHandler;
@@ -87,6 +92,13 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
 
         if (MainActivity.getMediaPlayer() == null) return;
         MainActivity.getMediaPlayer().seekTo( currentProgress );
+
+        int chosemin = currentProgress / 1000 / 60;
+        int chosesec = currentProgress / 1000 - chosemin * 60;
+        currentProgressTV.setText(String.format(getActivity().getString(R.string.playtime),
+                chosemin, chosesec));
+
+        seekBar.setProgress(MainActivity.getMediaPlayer().getCurrentPosition());
     }
 
     private enum PlayerState {PLAYING, PAUSED}
@@ -149,7 +161,6 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         MainActivity.setMediaPlayer(mediaPlayer);
 
-
         try {
             mediaPlayer.setDataSource(track_prev_url);
             mediaPlayer.prepare(); // might take long! (for buffering, etc)
@@ -204,17 +215,25 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
         }
 
         seekBarHandler = new Handler();
+//        if (MainActivity.getMediaPlayer() != null) {
+//            int totPos = MainActivity.getMediaPlayer().getDuration();
+//            totmin = totPos / 1000 / 60;
+//            totsec = totPos / 1000 - totmin * 60;
+//        }
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (MainActivity.getMediaPlayer() != null && seekBar != null) {
+                if (MainActivity.getMediaPlayer() != null && seekBar != null && getActivity() != null) {
+                    int currPos = MainActivity.getMediaPlayer().getCurrentPosition();
+                    int currmin = currPos / 1000 / 60;
+                    int currsec = currPos / 1000 - currmin * 60;
                     seekBar.setProgress(MainActivity.getMediaPlayer().getCurrentPosition());
+                    currentProgressTV.setText(String.format(getActivity().getString(R.string.playtime),
+                            currmin, currsec));
                 }
                 seekBarHandler.postDelayed(this, 1000);
             }
         });
-
-
 
     }
 
@@ -230,10 +249,10 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
         Log.d(TAG, "artist: " + selectedTrack.artists.get(0).name);
         artistName.setText(selectedTrack.artists.get(0).name);
         int duration = Integer.valueOf("" + (selectedTrack.duration_ms / 1000));
-        int minutes = duration / 60;
-        int leftover = duration % 60;
-        trackTitle.setText(selectedTrack.name + " / " + selectedTrack.album.name
-                + " (" + minutes + "m " + leftover + "s)");
+        totmin= duration / 60;
+        totsec= duration % 60;
+        trackTitle.setText(String.format(getString(R.string.tracktitle), selectedTrack.name,
+                selectedTrack.album.name, totmin, totsec));
 
         if (getNumberOfImages(selectedTrack) > 0) {
             albumImage.setVisibility(View.VISIBLE);
