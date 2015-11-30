@@ -5,11 +5,17 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,7 +27,9 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.SeekBarProgressChange;
 import org.androidannotations.annotations.ViewById;
+import org.aspectj.lang.annotation.After;
 
 import java.io.IOException;
 
@@ -29,7 +37,7 @@ import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
 @EFragment(R.layout.play_track)
-public class PlayTrackFragment extends DialogFragment {
+public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekBarChangeListener {
 
     @FragmentArg
     Parcelable trackResult;
@@ -40,10 +48,10 @@ public class PlayTrackFragment extends DialogFragment {
     @FragmentArg
     int numberOfSearchResults;
 
+    @ViewById(R.id.seekBar)
+    SeekBar seekBar;
     @ViewById(R.id.play_album_image)
     ImageView albumImage;
-    @ViewById(R.id.play_album_title)
-    TextView albumTitle;
     @ViewById(R.id.play_track_title)
     TextView trackTitle;
     @ViewById(R.id.play_artist_name)
@@ -56,10 +64,30 @@ public class PlayTrackFragment extends DialogFragment {
     ImageView nextBtn;
 
     private static Handler handler;
+    private static Handler seekBarHandler;
 
     private static String TAG = MainActivity.TAG + "-PTF";
 
     private static Track selectedTrack;
+    private static int currentProgress;
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        currentProgress = progress;
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        Log.d(TAG, "start tracking");
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        Log.d(TAG, "stop tracking");
+
+        if (MainActivity.getMediaPlayer() == null) return;
+        MainActivity.getMediaPlayer().seekTo( currentProgress );
+    }
 
     private enum PlayerState {PLAYING, PAUSED}
 
@@ -75,35 +103,36 @@ public class PlayTrackFragment extends DialogFragment {
 
         MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
 
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-        }
-
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-        MainActivity.setMediaPlayer(mediaPlayer);
+//        if (mediaPlayer != null) {
+//            mediaPlayer.release();
+//        }
+//
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//
+//        MainActivity.setMediaPlayer(mediaPlayer);
 
         if (mPlayerState == PlayerState.PAUSED) {
             mPlayerState = PlayerState.PLAYING;
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
-            if (tr == null) {
-                Log.e(TAG, "tr was null");
-                return;
-            }
-            startAudio(tr.getTrack().preview_url);
+//            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
+//            if (tr == null) {
+//                Log.e(TAG, "tr was null");
+//                return;
+//            }
+//            startAudio(tr.getTrack().preview_url);
+            mediaPlayer.start();
 
         } else if (mPlayerState == PlayerState.PLAYING) {
             mPlayerState = PlayerState.PAUSED;
 
             playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
 
-            mediaPlayer.release();
+            mediaPlayer.pause();
 
-            MainActivity.setMediaPlayer(null);
+//            MainActivity.setMediaPlayer(null);
 
         }
 
@@ -122,9 +151,6 @@ public class PlayTrackFragment extends DialogFragment {
 
 
         try {
-//            if (mediaPlayer.isPlaying()) {
-//                return;
-//            }
             mediaPlayer.setDataSource(track_prev_url);
             mediaPlayer.prepare(); // might take long! (for buffering, etc)
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -133,6 +159,7 @@ public class PlayTrackFragment extends DialogFragment {
                     playPauseBtn.callOnClick();
                 }
             });
+            seekBar.setMax(mediaPlayer.getDuration());
             mediaPlayer.start();
         } catch (IllegalStateException ignored) {
             mediaPlayer.reset();
@@ -175,6 +202,20 @@ public class PlayTrackFragment extends DialogFragment {
         } else {
             Log.d(TAG, "PTF onCreate getHandler is NOT null");
         }
+
+        seekBarHandler = new Handler();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (MainActivity.getMediaPlayer() != null && seekBar != null) {
+                    seekBar.setProgress(MainActivity.getMediaPlayer().getCurrentPosition());
+                }
+                seekBarHandler.postDelayed(this, 1000);
+            }
+        });
+
+
+
     }
 
     @AfterViews
@@ -191,9 +232,8 @@ public class PlayTrackFragment extends DialogFragment {
         int duration = Integer.valueOf("" + (selectedTrack.duration_ms / 1000));
         int minutes = duration / 60;
         int leftover = duration % 60;
-        trackTitle.setText(selectedTrack.name
+        trackTitle.setText(selectedTrack.name + " / " + selectedTrack.album.name
                 + " (" + minutes + "m " + leftover + "s)");
-        albumTitle.setText(selectedTrack.name);
 
         if (getNumberOfImages(selectedTrack) > 0) {
             albumImage.setVisibility(View.VISIBLE);
@@ -230,8 +270,9 @@ public class PlayTrackFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        MediaPlayer mediaPlayer = MainActivity.getMediaPlayer();
-//        if (mediaPlayer == null) {
+
+        seekBar.setOnSeekBarChangeListener(this);
+
         mPlayerState = PlayerState.PLAYING;
         playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 

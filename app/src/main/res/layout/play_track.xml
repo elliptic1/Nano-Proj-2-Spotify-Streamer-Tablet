@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="@dimen/dialog_fragment_width"
-             android:layout_height="@dimen/dialog_fragment_width">
+             android:layout_height="@dimen/dialog_fragment_height">
 
-    <ImageView
-        android:id="@+id/play_album_image"
-        android:layout_width="@dimen/dialog_fragment_width"
-        android:layout_height="@dimen/dialog_fragment_width"
-        />
 
     <LinearLayout
         android:layout_width="@dimen/dialog_fragment_width"
-        android:layout_height="@dimen/dialog_fragment_width"
+        android:layout_height="@dimen/dialog_fragment_height"
         android:orientation="vertical"
-        android:alpha="0.7"
+        android:alpha="1.0"
         >
+
+        <ImageView
+            android:id="@+id/play_album_image"
+            android:layout_width="@dimen/dialog_fragment_width"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            />
 
         <TextView
             android:id="@+id/play_artist_name"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:gravity="center"
-            android:textSize="26sp"
+            android:textSize="16sp"
             android:textColor="#000000"
-            android:text="Sample Artist"/>
+            android:text="Sample Artist" />
 
         <TextView
             android:id="@+id/play_track_title"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/colorAccent"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="12sp"
             android:textColor="#000000"
             android:text="The Track Title"/>
 
-        <TextView
-            android:id="@+id/play_album_title"
-            android:layout_width="fill_parent"
+        <SeekBar
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:text="Album Title"/>
+            android:id="@+id/seekBar"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_gravity="center"
+            android:orientation="horizontal"
             >
             <View
                 android:layout_width="0dp"

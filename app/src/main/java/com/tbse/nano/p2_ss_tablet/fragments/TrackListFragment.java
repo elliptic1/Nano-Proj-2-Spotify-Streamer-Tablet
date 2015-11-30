@@ -283,7 +283,8 @@ public class TrackListFragment extends ListFragment {
         Log.d(TAG, "calling pTF.setHandler");
         playTrackFragment.setHandler(changeTrackHandler);
         Log.d(TAG, "pTF.show");
-        playTrackFragment.show(activity.getFragmentManager(), "track");
+        if (activity != null)
+            playTrackFragment.show(activity.getFragmentManager(), "track");
     }
 
 
