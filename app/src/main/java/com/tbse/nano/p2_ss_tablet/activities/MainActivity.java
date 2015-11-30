@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static String TAG = "Nano";
     private static MediaPlayer mediaPlayer;
-    SearchView searchView;
+    private SearchView searchView;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.

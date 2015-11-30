@@ -75,6 +75,7 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
 
     private static Track selectedTrack;
     private static int currentProgress;
+    private boolean stateWasRestored;
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -91,7 +92,7 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
         Log.d(TAG, "stop tracking");
 
         if (MainActivity.getMediaPlayer() == null) return;
-        MainActivity.getMediaPlayer().seekTo( currentProgress );
+        MainActivity.getMediaPlayer().seekTo(currentProgress);
 
         int chosemin = currentProgress / 1000 / 60;
         int chosesec = currentProgress / 1000 - chosemin * 60;
@@ -192,27 +193,25 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("track", new TrackResult(selectedTrack.track_number, selectedTrack));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, getTheme());
 
-        try {
-            selectedTrack = ((TrackResult) trackResult).getTrack();
-            Log.d(TAG, "set track result to " + selectedTrack.name);
-        } catch (NullPointerException e) {
-            Log.d(TAG, "onCreate npe");
-        } catch (Exception e) {
-            Log.d(TAG, "onCreate is using a new track");
-        } finally {
-            if (selectedTrack == null)
-                selectedTrack = new Track();
+        stateWasRestored = false;
+        if (savedInstanceState != null) {
+            stateWasRestored = true;
+            if (savedInstanceState.getParcelable("track") != null)
+                selectedTrack = ((TrackResult) savedInstanceState.getParcelable("track")).getTrack();
         }
 
-        if (getHandler() == null) {
-            Log.e(TAG, "PTF onCreate getHandler is null");
-        } else {
-            Log.d(TAG, "PTF onCreate getHandler is NOT null");
-        }
+        if (selectedTrack == null)
+            selectedTrack = new Track();
 
         seekBarHandler = new Handler();
 //        if (MainActivity.getMediaPlayer() != null) {
@@ -249,8 +248,8 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
         Log.d(TAG, "artist: " + selectedTrack.artists.get(0).name);
         artistName.setText(selectedTrack.artists.get(0).name);
         int duration = Integer.valueOf("" + (selectedTrack.duration_ms / 1000));
-        totmin= duration / 60;
-        totsec= duration % 60;
+        totmin = duration / 60;
+        totsec = duration % 60;
         trackTitle.setText(String.format(getString(R.string.tracktitle), selectedTrack.name,
                 selectedTrack.album.name, totmin, totsec));
 
@@ -292,26 +291,31 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
 
         seekBar.setOnSeekBarChangeListener(this);
 
-        mPlayerState = PlayerState.PLAYING;
-        playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
+        if (!stateWasRestored) {
+            mPlayerState = PlayerState.PLAYING;
+            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
 
-        TrackResult tr = (TrackResult) getArguments().getSerializable("track");
-        if (tr == null) {
-            Log.e(TAG, "tr was null");
-            return;
+            TrackResult tr = (TrackResult) getArguments().getSerializable("track");
+            if (tr == null) {
+                Log.e(TAG, "tr was null");
+                return;
+            }
+            startAudio(tr.getTrack().preview_url);
+        } else {
+
+            // State was restored (device flip?)
+
+            seekBar.setMax(MainActivity.getMediaPlayer().getDuration());
+            seekBar.setProgress(currentProgress);
+
+            if (MainActivity.getMediaPlayer().isPlaying()) {
+                mPlayerState = PlayerState.PLAYING;
+                playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
+            } else {
+                mPlayerState = PlayerState.PAUSED;
+                playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
+            }
         }
-        startAudio(tr.getTrack().preview_url);
-
-//            return;
-//        }
-
-//        if (mediaPlayer.isPlaying()) {
-//            mPlayerState = PlayerState.PLAYING;
-//            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
-//        } else {
-//            mPlayerState = PlayerState.PAUSED;
-//            playPauseBtn.setBackgroundResource(android.R.drawable.ic_media_play);
-//        }
 
     }
 }
