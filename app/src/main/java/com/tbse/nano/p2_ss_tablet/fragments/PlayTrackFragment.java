@@ -5,15 +5,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -27,9 +22,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
-import org.androidannotations.annotations.SeekBarProgressChange;
 import org.androidannotations.annotations.ViewById;
-import org.aspectj.lang.annotation.After;
 
 import java.io.IOException;
 
@@ -164,15 +157,20 @@ public class PlayTrackFragment extends DialogFragment implements SeekBar.OnSeekB
 
         try {
             mediaPlayer.setDataSource(track_prev_url);
-            mediaPlayer.prepare(); // might take long! (for buffering, etc)
+            mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    seekBar.setMax(mp.getDuration());
+                    mp.start();
+                }
+            });
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     playPauseBtn.callOnClick();
                 }
             });
-            seekBar.setMax(mediaPlayer.getDuration());
-            mediaPlayer.start();
         } catch (IllegalStateException ignored) {
             mediaPlayer.reset();
             mediaPlayer.release();
